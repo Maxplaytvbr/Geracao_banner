@@ -1,0 +1,46 @@
+
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Gerador de Banner de Filmes</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <div class="container">
+    <h1>Gerador de Banner de Filmes</h1>
+
+    <!-- Upload de logo -->
+    <label for="logoUpload">Faça upload da sua logo:</label>
+    <input type="file" id="logoUpload" accept="image/png">
+
+    <!-- Nome do filme -->
+    <label for="movieName">Nome do Filme:</label>
+    <input type="text" id="movieName" placeholder="Digite o nome do filme">
+
+    <!-- Layout do Banner -->
+    <label for="layoutSelect">Escolha o Layout do Banner:</label>
+    <select id="layoutSelect">
+      <option value="layout1">Layout 1</option>
+      <option value="layout2">Layout 2</option>
+      <option value="layout3">Layout 3</option>
+    </select>
+
+    <!-- Botão para gerar o banner -->
+    <button onclick="generateBanner()">Gerar Banner</button>
+
+    <!-- Exibição do banner gerado -->
+    <div id="bannerOutput">
+      <canvas id="bannerCanvas"></canvas>
+    </div>
+
+    <div id="finalBannerOutput">
+      <img id="finalBanner" alt="Banner Gerado">
+    </div>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>
