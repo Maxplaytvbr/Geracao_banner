@@ -1,1 +1,0 @@
-# Geracao_banner
