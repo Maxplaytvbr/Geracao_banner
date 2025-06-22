@@ -1,0 +1,1370 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MaxPlay Banner Generator</title>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Oswald:wght@400;500;600&family=Playfair+Display:wght@400;500;700&family=Poppins:wght@400;500;600&family=Roboto:wght@400;500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        :root {
+            --primary-bg: #0a1929;
+            --secondary-bg: #132f4c;
+            --accent: #ff6b00;
+            --text: #ffffff;
+            --text-secondary: #b0b8c4;
+        }
+        
+        body {
+            font-family: 'Montserrat', sans-serif;
+            background-color: var(--primary-bg);
+            color: var(--text);
+        }
+        
+        .accent {
+            color: var(--accent);
+        }
+        
+        .bg-accent {
+            background-color: var(--accent);
+        }
+        
+        .bg-secondary {
+            background-color: var(--secondary-bg);
+        }
+        
+        .search-results {
+            max-height: 300px;
+            overflow-y: auto;
+            background-color: var(--secondary-bg);
+            border: 1px solid #2a4365;
+            border-radius: 0.5rem;
+            z-index: 50;
+        }
+        
+        .search-result-item:hover {
+            background-color: rgba(255, 107, 0, 0.2);
+        }
+        
+        .banner-container {
+            width: 1080px;
+            height: 1350px;
+            position: relative;
+            overflow: hidden;
+            background-color: #000;
+        }
+        
+        .banner-preview {
+            transform: scale(0.25);
+            transform-origin: top left;
+            width: 1080px;
+            height: 1350px;
+        }
+        
+        .preview-container {
+            width: 270px;
+            height: 337.5px;
+            overflow: hidden;
+            position: relative;
+        }
+        
+        .rating {
+            background-color: rgba(0, 0, 0, 0.7);
+            border: 2px solid var(--accent);
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-weight: bold;
+        }
+        
+        .quality-badge {
+            background-color: var(--accent);
+            color: #000;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-weight: bold;
+        }
+        
+        .whatsapp-button {
+            background-color: #25D366;
+            color: white;
+            border-radius: 50px;
+            padding: 8px 16px;
+            display: inline-flex;
+            align-items: center;
+            font-weight: bold;
+        }
+        
+        .logo {
+            position: absolute;
+            max-width: 150px;
+            max-height: 150px;
+            z-index: 10;
+        }
+        
+        .movie-logo {
+            max-width: 90%;
+            max-height: 150px;
+            object-fit: contain;
+            filter: drop-shadow(0 0 8px rgba(0, 0, 0, 0.5));
+        }
+        
+        .movie-logo-lg {
+            max-width: 90%;
+            max-height: 200px;
+            object-fit: contain;
+            filter: drop-shadow(0 0 8px rgba(0, 0, 0, 0.5));
+        }
+        
+        .tab-button {
+            background-color: var(--secondary-bg);
+            color: var(--text-secondary);
+            padding: 10px 20px;
+            border-radius: 8px 8px 0 0;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .tab-button.active {
+            background-color: var(--accent);
+            color: #000;
+            font-weight: bold;
+        }
+        
+        .banner-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(0deg, rgba(0,0,0,0.9) 0%, rgba(0,0,0,0.5) 50%, rgba(0,0,0,0.8) 100%);
+        }
+        
+        /* Custom scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        
+        ::-webkit-scrollbar-track {
+            background: var(--secondary-bg);
+        }
+        
+        ::-webkit-scrollbar-thumb {
+            background: var(--accent);
+            border-radius: 4px;
+        }
+        
+        ::-webkit-scrollbar-thumb:hover {
+            background: #ff8533;
+        }
+        
+        .loading-spinner {
+            border: 4px solid rgba(255, 255, 255, 0.3);
+            border-radius: 50%;
+            border-top: 4px solid var(--accent);
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        .fade-in {
+            animation: fadeIn 0.5s ease-in;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        
+        .input-group {
+            position: relative;
+        }
+        
+        .input-group input {
+            padding-left: 40px;
+        }
+        
+        .input-group .icon {
+            position: absolute;
+            left: 12px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--accent);
+        }
+        
+        .tabs-container {
+            display: flex;
+            flex-wrap: nowrap;
+            overflow-x: auto;
+            scrollbar-width: thin;
+            -ms-overflow-style: none;
+        }
+        
+        .tabs-container::-webkit-scrollbar {
+            height: 4px;
+        }
+        
+        /* Advanced styling effects */
+        .text-shadow-lg {
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+        }
+        
+        .text-shadow-xl {
+            text-shadow: 3px 3px 6px rgba(0, 0, 0, 0.7);
+        }
+        
+        .text-shadow-2xl {
+            text-shadow: 4px 4px 8px rgba(0, 0, 0, 0.9);
+        }
+        
+        .text-glow {
+            text-shadow: 0 0 10px rgba(255, 255, 255, 0.7), 
+                         0 0 20px rgba(255, 255, 255, 0.5);
+        }
+        
+        .text-glow-accent {
+            text-shadow: 0 0 10px rgba(255, 107, 0, 0.7), 
+                         0 0 20px rgba(255, 107, 0, 0.5);
+        }
+        
+        .poster-shadow {
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.8),
+                        0 10px 10px -5px rgba(0, 0, 0, 0.5);
+        }
+        
+        .poster-shadow-accent {
+            box-shadow: 0 10px 25px -5px rgba(255, 107, 0, 0.4),
+                        0 10px 10px -5px rgba(0, 0, 0, 0.5);
+        }
+        
+        .glass-effect {
+            background: rgba(20, 20, 20, 0.7);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+        }
+        
+        .glass-effect-light {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+        }
+        
+        .cinematic-bars {
+            position: absolute;
+            left: 0;
+            width: 100%;
+            height: 10%;
+            background-color: #000;
+        }
+        
+        .cinematic-top {
+            top: 0;
+        }
+        
+        .cinematic-bottom {
+            bottom: 0;
+        }
+        
+        .gradient-text {
+            background: linear-gradient(to right, #ff6b00, #ff9d00);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+        
+        .border-glow {
+            box-shadow: 0 0 15px rgba(255, 107, 0, 0.7);
+        }
+        
+        .border-glow-white {
+            box-shadow: 0 0 15px rgba(255, 255, 255, 0.7);
+        }
+        
+        .diagonal-split {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, rgba(0,0,0,0.8) 0%, transparent 50%, rgba(0,0,0,0.8) 100%);
+        }
+        
+        .font-bebas {
+            font-family: 'Bebas Neue', sans-serif;
+        }
+        
+        .font-oswald {
+            font-family: 'Oswald', sans-serif;
+        }
+        
+        .font-playfair {
+            font-family: 'Playfair Display', serif;
+        }
+        
+        .font-roboto {
+            font-family: 'Roboto', sans-serif;
+        }
+        
+        .font-poppins {
+            font-family: 'Poppins', sans-serif;
+        }
+        
+        .rotate-poster {
+            transform: perspective(1000px) rotateY(-15deg);
+            transition: transform 0.5s ease;
+        }
+        
+        .rotate-poster-reverse {
+            transform: perspective(1000px) rotateY(15deg);
+            transition: transform 0.5s ease;
+        }
+        
+        .poster-reflection {
+            position: relative;
+        }
+        
+        .poster-reflection::after {
+            content: '';
+            position: absolute;
+            bottom: -20px;
+            left: 0;
+            width: 100%;
+            height: 20px;
+            background: linear-gradient(to bottom, rgba(0,0,0,0.5), transparent);
+            transform: scaleY(-1);
+            filter: blur(2px);
+        }
+        
+        .text-outline {
+            -webkit-text-stroke: 1px rgba(255, 255, 255, 0.3);
+        }
+        
+        .text-outline-dark {
+            -webkit-text-stroke: 2px rgba(0, 0, 0, 0.7);
+        }
+        
+        .text-3d {
+            text-shadow: 
+                1px 1px 0 #000,
+                2px 2px 0 #000,
+                3px 3px 0 #000,
+                4px 4px 0 #000,
+                5px 5px 0 #000;
+        }
+        
+        .text-3d-accent {
+            text-shadow: 
+                1px 1px 0 #ff6b00,
+                2px 2px 0 #ff6b00,
+                3px 3px 0 #ff6b00,
+                4px 4px 0 #ff6b00;
+        }
+        
+        @keyframes float {
+            0% { transform: translateY(0px); }
+            50% { transform: translateY(-10px); }
+            100% { transform: translateY(0px); }
+        }
+        
+        .floating {
+            animation: float 6s ease-in-out infinite;
+        }
+        
+        .backdrop-blur {
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+        }
+        
+        .clip-path-diagonal {
+            clip-path: polygon(0 0, 100% 0, 100% 85%, 0 100%);
+        }
+        
+        .clip-path-diagonal-reverse {
+            clip-path: polygon(0 0, 100% 15%, 100% 100%, 0 100%);
+        }
+        
+        .logo-glow {
+            filter: drop-shadow(0 0 8px rgba(255, 255, 255, 0.7));
+        }
+        
+        .logo-glow-accent {
+            filter: drop-shadow(0 0 8px rgba(255, 107, 0, 0.7));
+        }
+    </style>
+</head>
+<body>
+    <main class="container mx-auto px-4 py-8">
+        <div class="bg-secondary rounded-lg p-6 shadow-lg mb-8">
+            <h2 class="text-2xl font-bold mb-4">Buscar Filme ou Série</h2>
+            <div class="relative">
+                <div class="flex items-center border-2 border-gray-600 rounded-lg overflow-hidden focus-within:border-accent">
+                    <input type="text" id="search-input" class="w-full px-4 py-3 bg-gray-800 text-white outline-none" placeholder="Digite o nome do filme ou série...">
+                    <button id="search-button" class="bg-accent text-black px-6 py-3 font-bold">
+                        <i class="fas fa-search mr-2"></i>Buscar
+                    </button>
+                </div>
+                <div id="search-results" class="search-results absolute w-full mt-1 hidden"></div>
+            </div>
+        </div>
+
+        <div id="content-container" class="hidden">
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                <div class="lg:col-span-1">
+                    <div class="bg-secondary rounded-lg p-6 shadow-lg mb-8">
+                        <h2 class="text-2xl font-bold mb-4">Informações do Filme</h2>
+                        <div id="movie-info" class="space-y-4">
+                            <div class="flex items-center space-x-4">
+                                <img id="movie-poster" src="" alt="Poster" class="w-32 h-48 object-cover rounded-md">
+                                <div>
+                                    <h3 id="movie-title" class="text-xl font-bold"></h3>
+                                    <p id="movie-year" class="text-gray-400"></p>
+                                    <div class="flex items-center mt-2">
+                                        <span id="movie-rating" class="rating mr-2"></span>
+                                        <span id="movie-quality" class="quality-badge"></span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div>
+                                <h4 class="font-bold text-gray-300 mb-1">Sinopse:</h4>
+                                <p id="movie-overview" class="text-sm text-gray-400"></p>
+                            </div>
+                            <div id="movie-logo-preview" class="hidden">
+                                <h4 class="font-bold text-gray-300 mb-1">Logo do Filme:</h4>
+                                <img id="movie-logo-preview-img" src="" alt="Logo do Filme" class="max-h-20 mt-2">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="bg-secondary rounded-lg p-6 shadow-lg mb-8">
+                        <h2 class="text-2xl font-bold mb-4">Contato WhatsApp</h2>
+                        <div class="mb-4">
+                            <label class="block text-gray-300 mb-2">Digite o número de WhatsApp para exibir no banner</label>
+                            <div class="input-group">
+                                <i class="fab fa-whatsapp icon"></i>
+                                <input type="text" id="whatsapp-input" class="w-full p-3 bg-gray-800 rounded-md" placeholder="(00) 00000-0000" value="(11) 99999-9999">
+                            </div>
+                        </div>
+                        <div class="flex items-center">
+                            <label class="block text-gray-300 mr-2">Texto do WhatsApp:</label>
+                            <select id="whatsapp-text" class="p-2 bg-gray-800 rounded-md">
+                                <option value="Assine agora">Assine agora</option>
+                                <option value="Disponível agora">Disponível agora</option>
+                                <option value="Contato exclusivo">Contato exclusivo</option>
+                                <option value="Fale conosco">Fale conosco</option>
+                                <option value="Assista agora">Assista agora</option>
+                                <option value="custom">Personalizado</option>
+                            </select>
+                        </div>
+                        <div id="custom-text-container" class="mt-3 hidden">
+                            <input type="text" id="custom-whatsapp-text" class="w-full p-2 bg-gray-800 rounded-md" placeholder="Digite o texto personalizado">
+                        </div>
+                        <button id="update-whatsapp" class="mt-4 bg-accent text-black px-4 py-2 rounded-md font-bold">
+                            <i class="fas fa-sync-alt mr-2"></i>Atualizar Contato
+                        </button>
+                    </div>
+
+                    <div class="bg-secondary rounded-lg p-6 shadow-lg">
+                        <h2 class="text-2xl font-bold mb-4">Logo da Empresa</h2>
+                        <div class="mb-4">
+                            <label class="block text-gray-300 mb-2">Faça upload da sua logo (PNG com fundo transparente)</label>
+                            <input type="file" id="logo-upload" accept="image/png" class="w-full p-2 bg-gray-800 rounded-md">
+                        </div>
+                        <div id="logo-preview" class="hidden mt-4">
+                            <p class="text-sm text-gray-400 mb-2">Prévia da logo:</p>
+                            <img id="logo-image" src="" alt="Logo Preview" class="max-h-20">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="lg:col-span-2">
+                    <div class="bg-secondary rounded-lg shadow-lg">
+                        <div class="tabs-container p-2 border-b border-gray-700">
+                            <div id="tab-1" class="tab-button active whitespace-nowrap mr-1">Layout 1</div>
+                            <div id="tab-2" class="tab-button whitespace-nowrap mr-1">Layout 2</div>
+                            <div id="tab-3" class="tab-button whitespace-nowrap mr-1">Layout 3</div>
+                            <div id="tab-4" class="tab-button whitespace-nowrap mr-1">Layout 4</div>
+                            <div id="tab-5" class="tab-button whitespace-nowrap mr-1">Layout 5</div>
+                            <div id="tab-6" class="tab-button whitespace-nowrap mr-1">Layout 6</div>
+                            <div id="tab-7" class="tab-button whitespace-nowrap mr-1">Layout 7</div>
+                            <div id="tab-8" class="tab-button whitespace-nowrap mr-1">Layout 8</div>
+                            <div id="tab-9" class="tab-button whitespace-nowrap mr-1">Layout 9</div>
+                            <div id="tab-10" class="tab-button whitespace-nowrap">Layout 10</div>
+                        </div>
+                        
+                        <div class="p-6">
+                            <div class="flex justify-center mb-6">
+                                <div class="preview-container border-4 border-accent rounded-md">
+                                    <div id="banner-preview" class="banner-preview"></div>
+                                </div>
+                            </div>
+                            
+                            <div class="flex justify-center">
+                                <button id="generate-button" class="bg-accent text-black px-8 py-3 rounded-full font-bold text-lg shadow-lg hover:bg-orange-500 transition-all flex items-center">
+                                    <i class="fas fa-magic mr-2"></i>Gerar e Baixar Banner
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div id="loading" class="hidden flex flex-col items-center justify-center py-20">
+            <div class="loading-spinner mb-4"></div>
+            <p class="text-lg">Carregando informações...</p>
+        </div>
+        
+        <div id="initial-state" class="text-center py-20">
+            <i class="fas fa-film text-6xl text-accent mb-4"></i>
+            <h2 class="text-2xl font-bold mb-2">Bem-vindo ao MaxPlay Banner Generator</h2>
+            <p class="text-gray-400 max-w-lg mx-auto">Busque por um filme ou série para começar a criar banners profissionais para streaming.</p>
+        </div>
+    </main>
+
+    <!-- Hidden banner container for generation -->
+    <div id="banner-container" class="banner-container fixed top-0 left-0 -z-50 opacity-0"></div>
+
+    <script>
+        const API_KEY = '54b9cff0f48a3f127fa5cd5906bbe251';
+        const BASE_URL = 'https://api.themoviedb.org/3';
+        const IMAGE_BASE_URL = 'https://image.tmdb.org/t/p/';
+        
+        let currentMovie = null;
+        let currentLayout = 1;
+        let logoImage = null;
+        let whatsappNumber = "(11) 99999-9999";
+        let whatsappText = "Assine agora";
+        
+        // DOM Elements
+        const searchInput = document.getElementById('search-input');
+        const searchButton = document.getElementById('search-button');
+        const searchResults = document.getElementById('search-results');
+        const contentContainer = document.getElementById('content-container');
+        const initialState = document.getElementById('initial-state');
+        const loadingElement = document.getElementById('loading');
+        const bannerPreview = document.getElementById('banner-preview');
+        const bannerContainer = document.getElementById('banner-container');
+        const generateButton = document.getElementById('generate-button');
+        const logoUpload = document.getElementById('logo-upload');
+        const logoPreview = document.getElementById('logo-preview');
+        const logoImageElement = document.getElementById('logo-image');
+        const whatsappInput = document.getElementById('whatsapp-input');
+        const whatsappTextSelect = document.getElementById('whatsapp-text');
+        const customTextContainer = document.getElementById('custom-text-container');
+        const customWhatsappText = document.getElementById('custom-whatsapp-text');
+        const updateWhatsappButton = document.getElementById('update-whatsapp');
+        const headerWhatsapp = document.getElementById('header-whatsapp');
+        const movieLogoPreview = document.getElementById('movie-logo-preview');
+        const movieLogoPreviewImg = document.getElementById('movie-logo-preview-img');
+        
+        // Tab elements
+        const tabs = [];
+        for (let i = 1; i <= 10; i++) {
+            tabs.push(document.getElementById(`tab-${i}`));
+        }
+        
+        // Event Listeners
+        searchInput.addEventListener('input', debounce(handleSearchInput, 500));
+        searchButton.addEventListener('click', () => handleSearch(searchInput.value));
+        generateButton.addEventListener('click', generateAndDownloadBanner);
+        
+        tabs.forEach((tab, index) => {
+            tab.addEventListener('click', () => {
+                setActiveTab(index + 1);
+                updateBannerPreview();
+            });
+        });
+        
+        logoUpload.addEventListener('change', handleLogoUpload);
+        updateWhatsappButton.addEventListener('click', updateWhatsappInfo);
+        
+        whatsappTextSelect.addEventListener('change', function() {
+            if (this.value === 'custom') {
+                customTextContainer.classList.remove('hidden');
+            } else {
+                customTextContainer.classList.add('hidden');
+                whatsappText = this.value;
+            }
+        });
+        
+        // Functions
+        function debounce(func, delay) {
+            let timeout;
+            return function() {
+                const context = this;
+                const args = arguments;
+                clearTimeout(timeout);
+                timeout = setTimeout(() => func.apply(context, args), delay);
+            };
+        }
+        
+        function updateWhatsappInfo() {
+            whatsappNumber = whatsappInput.value.trim() || "(11) 99999-9999";
+            
+            if (whatsappTextSelect.value === 'custom') {
+                whatsappText = customWhatsappText.value.trim() || "Assine agora";
+            } else {
+                whatsappText = whatsappTextSelect.value;
+            }
+            
+            // Update header WhatsApp number
+            headerWhatsapp.textContent = whatsappNumber;
+            
+            updateBannerPreview();
+            
+            // Show confirmation message
+            const confirmationMsg = document.createElement('div');
+            confirmationMsg.className = 'mt-2 text-green-400 text-sm fade-in';
+            confirmationMsg.innerHTML = '<i class="fas fa-check-circle mr-1"></i> Contato atualizado com sucesso!';
+            updateWhatsappButton.parentNode.appendChild(confirmationMsg);
+            
+            setTimeout(() => {
+                confirmationMsg.remove();
+            }, 3000);
+        }
+        
+        async function handleSearchInput() {
+            const query = searchInput.value.trim();
+            if (query.length < 2) {
+                searchResults.classList.add('hidden');
+                return;
+            }
+            
+            try {
+                const results = await searchMovies(query);
+                displaySearchResults(results);
+            } catch (error) {
+                console.error('Error searching movies:', error);
+            }
+        }
+        
+        async function searchMovies(query) {
+            const response = await fetch(`${BASE_URL}/search/multi?api_key=${API_KEY}&query=${encodeURIComponent(query)}&language=pt-BR`);
+            const data = await response.json();
+            return data.results.filter(item => item.media_type === 'movie' || item.media_type === 'tv').slice(0, 8);
+        }
+        
+        function displaySearchResults(results) {
+            if (results.length === 0) {
+                searchResults.innerHTML = '<div class="p-4 text-center text-gray-400">Nenhum resultado encontrado</div>';
+                searchResults.classList.remove('hidden');
+                return;
+            }
+            
+            searchResults.innerHTML = '';
+            results.forEach(item => {
+                const resultItem = document.createElement('div');
+                resultItem.className = 'search-result-item p-3 cursor-pointer border-b border-gray-700 last:border-0';
+                
+                const title = item.media_type === 'movie' ? item.title : item.name;
+                const year = item.media_type === 'movie' 
+                    ? (item.release_date ? `(${item.release_date.substring(0, 4)})` : '')
+                    : (item.first_air_date ? `(${item.first_air_date.substring(0, 4)})` : '');
+                
+                resultItem.innerHTML = `
+                    <div class="flex items-center">
+                        ${item.poster_path 
+                            ? `<img src="${IMAGE_BASE_URL}w92${item.poster_path}" alt="${title}" class="w-10 h-15 object-cover rounded mr-3">` 
+                            : `<div class="w-10 h-15 bg-gray-700 rounded mr-3 flex items-center justify-center"><i class="fas fa-film"></i></div>`
+                        }
+                        <div>
+                            <div class="font-medium">${title}</div>
+                            <div class="text-xs text-gray-400">${year} · ${item.media_type === 'movie' ? 'Filme' : 'Série'}</div>
+                        </div>
+                    </div>
+                `;
+                
+                resultItem.addEventListener('click', () => {
+                    searchResults.classList.add('hidden');
+                    searchInput.value = title;
+                    fetchMovieDetails(item.id, item.media_type);
+                });
+                
+                searchResults.appendChild(resultItem);
+            });
+            
+            searchResults.classList.remove('hidden');
+        }
+        
+        async function handleSearch(query) {
+            if (!query.trim()) return;
+            
+            searchResults.classList.add('hidden');
+            showLoading();
+            
+            try {
+                const results = await searchMovies(query);
+                if (results.length > 0) {
+                    await fetchMovieDetails(results[0].id, results[0].media_type);
+                } else {
+                    hideLoading();
+                    alert('Nenhum resultado encontrado para sua busca.');
+                }
+            } catch (error) {
+                console.error('Error handling search:', error);
+                hideLoading();
+                alert('Ocorreu um erro ao buscar o filme. Por favor, tente novamente.');
+            }
+        }
+        
+        async function fetchMovieDetails(id, mediaType) {
+            try {
+                const response = await fetch(`${BASE_URL}/${mediaType}/${id}?api_key=${API_KEY}&language=pt-BR&append_to_response=images,videos,credits`);
+                const data = await response.json();
+                
+                currentMovie = {
+                    id: data.id,
+                    title: mediaType === 'movie' ? data.title : data.name,
+                    overview: data.overview || 'Sinopse não disponível',
+                    posterPath: data.poster_path,
+                    backdropPath: data.backdrop_path,
+                    releaseDate: mediaType === 'movie' ? data.release_date : data.first_air_date,
+                    voteAverage: data.vote_average,
+                    mediaType: mediaType,
+                    genres: data.genres || [],
+                    images: data.images || { backdrops: [], posters: [] },
+                    videos: data.videos?.results || [],
+                    credits: data.credits || { cast: [], crew: [] },
+                    logoPath: null
+                };
+                
+                // Fetch movie logos
+                await fetchMovieLogo(id, mediaType);
+                
+                displayMovieInfo();
+                updateBannerPreview();
+                showContent();
+            } catch (error) {
+                console.error('Error fetching movie details:', error);
+                hideLoading();
+                alert('Ocorreu um erro ao carregar os detalhes do filme. Por favor, tente novamente.');
+            }
+        }
+        
+        async function fetchMovieLogo(id, mediaType) {
+            try {
+                // Fetch images with logos
+                const response = await fetch(`${BASE_URL}/${mediaType}/${id}/images?api_key=${API_KEY}`);
+                const data = await response.json();
+                
+                // Check if there are logos available
+                if (data.logos && data.logos.length > 0) {
+                    // Sort by width to get the highest quality logo
+                    const logos = data.logos.sort((a, b) => b.width - a.width);
+                    
+                    // Prefer English logos if available
+                    const englishLogo = logos.find(logo => logo.iso_639_1 === 'en');
+                    const bestLogo = englishLogo || logos[0];
+                    
+                    currentMovie.logoPath = bestLogo.file_path;
+                    
+                    // Show logo preview
+                    if (currentMovie.logoPath) {
+                        movieLogoPreviewImg.src = `${IMAGE_BASE_URL}w500${currentMovie.logoPath}`;
+                        movieLogoPreview.classList.remove('hidden');
+                    }
+                }
+            } catch (error) {
+                console.error('Error fetching movie logo:', error);
+                // Continue without logo if there's an error
+            }
+        }
+        
+        function displayMovieInfo() {
+            document.getElementById('movie-title').textContent = currentMovie.title;
+            
+            const year = currentMovie.releaseDate ? new Date(currentMovie.releaseDate).getFullYear() : 'N/A';
+            document.getElementById('movie-year').textContent = `${year} · ${currentMovie.mediaType === 'movie' ? 'Filme' : 'Série'}`;
+            
+            document.getElementById('movie-poster').src = currentMovie.posterPath 
+                ? `${IMAGE_BASE_URL}w342${currentMovie.posterPath}` 
+                : 'https://via.placeholder.com/342x513?text=Sem+Poster';
+            
+            document.getElementById('movie-overview').textContent = currentMovie.overview;
+            
+            // Rating and quality
+            const rating = getContentRating(currentMovie.voteAverage);
+            document.getElementById('movie-rating').textContent = rating;
+            document.getElementById('movie-quality').textContent = Math.random() > 0.3 ? '4K' : 'HD';
+            
+            // Hide logo preview if no logo is available
+            if (!currentMovie.logoPath) {
+                movieLogoPreview.classList.add('hidden');
+            }
+        }
+        
+        function getContentRating(voteAverage) {
+            if (voteAverage >= 8) return 'L';
+            if (voteAverage >= 7) return '10';
+            if (voteAverage >= 6) return '12';
+            if (voteAverage >= 5) return '14';
+            if (voteAverage >= 4) return '16';
+            return '18';
+        }
+        
+        function updateBannerPreview() {
+            if (!currentMovie) return;
+            
+            const posterUrl = currentMovie.posterPath 
+                ? `${IMAGE_BASE_URL}w500${currentMovie.posterPath}` 
+                : 'https://via.placeholder.com/500x750?text=Sem+Poster';
+                
+            const backdropUrl = currentMovie.backdropPath 
+                ? `${IMAGE_BASE_URL}original${currentMovie.backdropPath}` 
+                : 'https://via.placeholder.com/1920x1080?text=Sem+Backdrop';
+            
+            const logoUrl = currentMovie.logoPath 
+                ? `${IMAGE_BASE_URL}w500${currentMovie.logoPath}` 
+                : null;
+            
+            const rating = getContentRating(currentMovie.voteAverage);
+            const quality = Math.random() > 0.3 ? '4K' : 'HD';
+            const year = currentMovie.releaseDate ? new Date(currentMovie.releaseDate).getFullYear() : 'N/A';
+            
+            // Get movie genres
+            const genres = currentMovie.genres.slice(0, 3).map(genre => genre.name).join(' • ');
+            
+            // Function to create title element (logo or text)
+            const createTitleElement = (size = 'normal', additionalClasses = '') => {
+                if (logoUrl) {
+                    const sizeClass = size === 'large' ? 'movie-logo-lg' : 'movie-logo';
+                    return `<img src="${logoUrl}" alt="${currentMovie.title}" class="${sizeClass} ${additionalClasses} logo-glow mb-6">`;
+                } else {
+                    const sizeClass = size === 'large' ? 'text-7xl' : 'text-6xl';
+                    return `<h1 class="${sizeClass} font-bold mb-6 ${additionalClasses}">${currentMovie.title}</h1>`;
+                }
+            };
+            
+            let bannerHTML = '';
+            
+            switch (currentLayout) {
+                case 1:
+                    bannerHTML = `
+                        <div class="relative w-full h-full">
+                            <img src="${backdropUrl}" class="w-full h-full object-cover" alt="Background">
+                            <div class="banner-overlay"></div>
+                            
+                            ${logoImage ? `<img src="${logoImage}" class="logo top-8 left-8" alt="Logo">` : ''}
+                            
+                            <div class="absolute bottom-0 left-0 w-full p-12">
+                                <div class="flex">
+                                    <img src="${posterUrl}" class="w-80 h-auto rounded-lg shadow-2xl" alt="Poster">
+                                    <div class="ml-8 mt-4">
+                                        ${createTitleElement('large')}
+                                        <div class="flex items-center mb-6">
+                                            <span class="rating mr-4 text-2xl">${rating}</span>
+                                            <span class="quality-badge text-2xl">${quality}</span>
+                                            <span class="ml-4 text-2xl text-gray-300">${year}</span>
+                                        </div>
+                                        <p class="text-2xl text-gray-300 mb-8 line-clamp-4">${currentMovie.overview}</p>
+                                        <div class="whatsapp-button text-2xl">
+                                            <i class="fab fa-whatsapp mr-2 text-3xl"></i>
+                                            ${whatsappText}: ${whatsappNumber}
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                    break;
+                    
+                case 2:
+                    bannerHTML = `
+                        <div class="relative w-full h-full">
+                            <img src="${posterUrl}" class="w-full h-full object-cover" alt="Poster">
+                            <div class="absolute inset-0 bg-gradient-to-t from-black via-transparent to-black"></div>
+                            
+                            ${logoImage ? `<img src="${logoImage}" class="logo top-8 right-8" alt="Logo">` : ''}
+                            
+                            <div class="absolute top-0 left-0 w-full h-full flex flex-col justify-between p-12">
+                                <div class="flex justify-between items-start">
+                                    <div class="flex items-center">
+                                        <span class="rating mr-4 text-2xl">${rating}</span>
+                                        <span class="quality-badge text-2xl">${quality}</span>
+                                    </div>
+                                </div>
+                                
+                                <div class="text-center">
+                                    ${createTitleElement('large', 'mx-auto')}
+                                    <p class="text-2xl text-gray-300 mb-8 max-w-3xl mx-auto line-clamp-3">${currentMovie.overview}</p>
+                                    <div class="whatsapp-button text-2xl inline-block">
+                                        <i class="fab fa-whatsapp mr-2 text-3xl"></i>
+                                        ${whatsappText}: ${whatsappNumber}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                    break;
+                    
+                case 3: // Redesigned Layout 3 - Cinematic Experience
+                    bannerHTML = `
+                        <div class="relative w-full h-full bg-black">
+                            <img src="${backdropUrl}" class="w-full h-full object-cover opacity-80" alt="Background">
+                            <div class="absolute inset-0 bg-gradient-to-r from-black via-transparent to-black"></div>
+                            
+                            ${logoImage ? `<img src="${logoImage}" class="logo top-8 right-8" alt="Logo">` : ''}
+                            
+                            <div class="absolute top-0 left-0 w-full h-full flex items-center">
+                                <div class="w-1/2 pl-16">
+                                    <div class="mb-6">
+                                        <span class="inline-block bg-accent px-4 py-1 text-black font-bold rounded-full text-lg mb-4">${currentMovie.mediaType === 'movie' ? 'FILME' : 'SÉRIE'}</span>
+                                        ${createTitleElement('large', 'text-shadow-2xl')}
+                                        <div class="flex items-center mb-6">
+                                            <span class="rating mr-4 text-xl">${rating}</span>
+                                            <span class="quality-badge text-xl">${quality}</span>
+                                            <span class="ml-4 text-xl text-gray-300">${year}</span>
+                                            ${genres ? `<span class="ml-4 text-xl text-gray-300">| ${genres}</span>` : ''}
+                                        </div>
+                                    </div>
+                                    
+                                    <p class="text-xl text-gray-300 mb-8 line-clamp-5 max-w-xl">${currentMovie.overview}</p>
+                                    
+                                    <div class="whatsapp-button text-xl inline-flex items-center px-6 py-3 shadow-lg border-2 border-white/20">
+                                        <i class="fab fa-whatsapp mr-3 text-2xl"></i>
+                                        ${whatsappText}: ${whatsappNumber}
+                                    </div>
+                                </div>
+                                
+                                <div class="w-1/2 flex justify-center items-center">
+                                    <div class="relative">
+                                        <img src="${posterUrl}" class="w-96 h-auto rounded-lg shadow-2xl rotate-poster poster-shadow-accent" alt="Poster">
+                                        <div class="absolute -bottom-4 w-full h-20 bg-gradient-to-t from-black to-transparent"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                    break;
+                    
+                case 4: // Redesigned Layout 4 - Premium Split
+                    bannerHTML = `
+                        <div class="relative w-full h-full bg-[#050714]">
+                            <div class="absolute inset-0 flex">
+                                <div class="w-1/2 h-full overflow-hidden relative">
+                                    <div class="absolute inset-0 bg-gradient-to-r from-[#050714]/80 to-transparent"></div>
+                                    <img src="${posterUrl}" class="w-full h-full object-cover" alt="Poster">
+                                </div>
+                                <div class="w-1/2 h-full overflow-hidden relative">
+                                    <div class="absolute inset-0 bg-gradient-to-l from-[#050714]/80 to-transparent"></div>
+                                    <img src="${backdropUrl}" class="w-full h-full object-cover" alt="Background">
+                                </div>
+                            </div>
+                            
+                            <div class="absolute inset-0 flex items-center justify-center">
+                                <div class="glass-effect-light rounded-2xl p-12 max-w-5xl mx-auto text-center">
+                                    ${createTitleElement('large', 'text-glow mx-auto')}
+                                    
+                                    <div class="flex justify-center items-center mb-8 space-x-6">
+                                        <span class="rating text-2xl border-2 border-accent">${rating}</span>
+                                        <span class="quality-badge text-2xl">${quality}</span>
+                                        <span class="text-2xl text-gray-300">${year}</span>
+                                    </div>
+                                    
+                                    <p class="text-2xl text-gray-300 mb-10 line-clamp-3 max-w-3xl mx-auto">${currentMovie.overview}</p>
+                                    
+                                    <div class="whatsapp-button text-2xl inline-block px-8 py-4 shadow-lg border-glow-white">
+                                        <i class="fab fa-whatsapp mr-2 text-3xl"></i>
+                                        ${whatsappText}: ${whatsappNumber}
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            ${logoImage ? `<img src="${logoImage}" class="logo top-8 left-8" alt="Logo">` : ''}
+                        </div>
+                    `;
+                    break;
+                    
+                case 5:
+                    bannerHTML = `
+                        <div class="relative w-full h-full">
+                            <div class="absolute inset-0 bg-gradient-to-b from-black via-transparent to-black"></div>
+                            <img src="${backdropUrl}" class="w-full h-full object-cover" alt="Background">
+                            
+                            ${logoImage ? `<img src="${logoImage}" class="logo bottom-8 left-8" alt="Logo">` : ''}
+                            
+                            <div class="absolute top-0 left-0 w-full h-full flex flex-col p-12">
+                                <div class="flex-1 flex items-center justify-center">
+                                    <div class="text-center">
+                                        ${createTitleElement('large', 'text-shadow-xl mx-auto')}
+                                        <div class="flex items-center justify-center mb-6">
+                                            <span class="rating mr-4 text-2xl">${rating}</span>
+                                            <span class="quality-badge text-2xl">${quality}</span>
+                                            <span class="ml-4 text-2xl text-gray-300">${year}</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <div class="flex items-end">
+                                    <img src="${posterUrl}" class="w-72 h-auto rounded-lg shadow-2xl" alt="Poster">
+                                    <div class="ml-8">
+                                        <p class="text-2xl text-gray-300 mb-8 line-clamp-3">${currentMovie.overview}</p>
+                                        <div class="whatsapp-button text-2xl">
+                                            <i class="fab fa-whatsapp mr-2 text-3xl"></i>
+                                            ${whatsappText}: ${whatsappNumber}
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                    break;
+                    
+                case 6: // Redesigned Layout 6 - Premium Showcase
+                    bannerHTML = `
+                        <div class="relative w-full h-full bg-gradient-to-br from-[#0f172a] to-[#1e293b]">
+                            <div class="absolute inset-0 opacity-30">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="100%" height="100%">
+                                    <defs>
+                                        <pattern id="grid" width="40" height="40" patternUnits="userSpaceOnUse">
+                                            <path d="M 40 0 L 0 0 0 40" fill="none" stroke="rgba(255,255,255,0.1)" stroke-width="1"/>
+                                        </pattern>
+                                    </defs>
+                                    <rect width="100%" height="100%" fill="url(#grid)" />
+                                </svg>
+                            </div>
+                            
+                            <div class="absolute top-0 left-0 w-full h-2/3 overflow-hidden">
+                                <img src="${backdropUrl}" class="w-full h-full object-cover opacity-60" alt="Background">
+                                <div class="absolute inset-0 bg-gradient-to-b from-transparent to-[#0f172a]"></div>
+                            </div>
+                            
+                            ${logoImage ? `<img src="${logoImage}" class="logo top-8 right-8 z-10" alt="Logo">` : ''}
+                            
+                            <div class="absolute bottom-0 left-0 w-full p-16">
+                                <div class="flex items-end">
+                                    <div class="relative mr-12">
+                                        <img src="${posterUrl}" class="w-80 h-auto rounded-lg shadow-2xl border-2 border-white/10 poster-shadow" alt="Poster">
+                                        <div class="absolute -top-6 -right-6 bg-accent text-black font-bold text-xl px-4 py-2 rounded-full shadow-lg">
+                                            ${quality}
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="flex-1">
+                                        <div class="flex items-center mb-4">
+                                            <span class="rating mr-4 text-xl">${rating}</span>
+                                            <span class="text-xl text-gray-300">${year}</span>
+                                            ${genres ? `<span class="ml-4 text-xl text-gray-300">| ${genres}</span>` : ''}
+                                        </div>
+                                        
+                                        ${createTitleElement('large', 'text-shadow-xl')}
+                                        
+                                        <p class="text-2xl text-gray-300 mb-8 line-clamp-3 max-w-3xl">${currentMovie.overview}</p>
+                                        
+                                        <div class="whatsapp-button text-2xl inline-flex items-center px-8 py-4 shadow-lg">
+                                            <i class="fab fa-whatsapp mr-3 text-3xl"></i>
+                                            <span class="font-medium">${whatsappText}: ${whatsappNumber}</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                    break;
+                    
+                case 7: // Redesigned Layout 7 - Theatrical Release
+                    bannerHTML = `
+                        <div class="relative w-full h-full bg-black">
+                            <div class="cinematic-bars cinematic-top"></div>
+                            <div class="cinematic-bars cinematic-bottom"></div>
+                            
+                            <div class="absolute top-[10%] left-0 w-full h-[80%] overflow-hidden">
+                                <img src="${backdropUrl}" class="w-full h-full object-cover" alt="Background">
+                                <div class="absolute inset-0 bg-gradient-to-r from-black via-transparent to-black opacity-90"></div>
+                            </div>
+                            
+                            ${logoImage ? `<img src="${logoImage}" class="logo top-[15%] right-8 z-10" alt="Logo">` : ''}
+                            
+                            <div class="absolute top-[10%] left-0 w-full h-[80%] flex">
+                                <div class="w-1/2 p-16 flex flex-col justify-center">
+                                    <div>
+                                        <span class="inline-block bg-white text-black px-4 py-1 text-sm font-bold tracking-widest mb-6">EXCLUSIVO</span>
+                                        ${createTitleElement('large', 'text-shadow-xl')}
+                                        
+                                        <div class="flex items-center mb-8">
+                                            <span class="rating mr-4 text-xl">${rating}</span>
+                                            <span class="quality-badge text-xl">${quality}</span>
+                                            <span class="ml-4 text-xl text-gray-300">${year}</span>
+                                        </div>
+                                        
+                                        <p class="text-xl text-gray-300 mb-10 line-clamp-4 max-w-xl">${currentMovie.overview}</p>
+                                        
+                                        <div class="whatsapp-button text-xl inline-flex items-center px-6 py-3">
+                                            <i class="fab fa-whatsapp mr-2 text-2xl"></i>
+                                            ${whatsappText}: ${whatsappNumber}
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <div class="w-1/2 flex items-center justify-center">
+                                    <div class="relative floating">
+                                        <img src="${posterUrl}" class="w-96 h-auto rounded-md shadow-2xl border-4 border-white/10" alt="Poster">
+                                        <div class="absolute -bottom-6 left-1/2 transform -translate-x-1/2 bg-black/80 backdrop-blur px-6 py-2 rounded-full border border-white/20 text-lg">
+                                            ${currentMovie.mediaType === 'movie' ? 'FILME' : 'SÉRIE'}
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                    break;
+                    
+                case 8: // Redesigned Layout 8 - Modern Gradient
+                    bannerHTML = `
+                        <div class="relative w-full h-full bg-gradient-to-br from-[#1a103d] via-[#311d5e] to-[#1a103d]">
+                            <div class="absolute inset-0 opacity-30">
+                                <svg width="100%" height="100%">
+                                    <defs>
+                                        <pattern id="dots" width="20" height="20" patternUnits="userSpaceOnUse">
+                                            <circle cx="10" cy="10" r="1" fill="rgba(255,255,255,0.3)" />
+                                        </pattern>
+                                    </defs>
+                                    <rect width="100%" height="100%" fill="url(#dots)" />
+                                </svg>
+                            </div>
+                            
+                            <div class="absolute top-0 right-0 w-2/3 h-full overflow-hidden opacity-40">
+                                <img src="${backdropUrl}" class="w-full h-full object-cover" alt="Background">
+                                <div class="absolute inset-0 bg-gradient-to-l from-transparent to-[#1a103d]"></div>
+                            </div>
+                            
+                            ${logoImage ? `<img src="${logoImage}" class="logo top-8 left-8 z-10" alt="Logo">` : ''}
+                            
+                            <div class="absolute top-0 left-0 w-full h-full flex flex-col justify-center p-16">
+                                <div class="max-w-5xl">
+                                    ${logoUrl 
+                                        ? `<img src="${logoUrl}" alt="${currentMovie.title}" class="movie-logo-lg logo-glow mb-8 max-w-2xl">` 
+                                        : `<h1 class="font-poppins text-7xl font-bold mb-8 text-transparent bg-clip-text bg-gradient-to-r from-white via-purple-200 to-white">${currentMovie.title}</h1>`
+                                    }
+                                    
+                                    <div class="flex items-center mb-8">
+                                        <span class="rating mr-4 text-xl border-2 border-purple-500">${rating}</span>
+                                        <span class="quality-badge text-xl bg-purple-600">${quality}</span>
+                                        <span class="ml-4 text-xl text-gray-300">${year}</span>
+                                        ${genres ? `<span class="ml-4 text-xl text-gray-300">| ${genres}</span>` : ''}
+                                    </div>
+                                    
+                                    <div class="flex mb-12">
+                                        <div class="w-2/3">
+                                            <p class="text-xl text-gray-300 mb-8 line-clamp-4">${currentMovie.overview}</p>
+                                            
+                                            <div class="whatsapp-button text-xl inline-flex items-center px-6 py-3 bg-gradient-to-r from-green-500 to-green-600">
+                                                <i class="fab fa-whatsapp mr-2 text-2xl"></i>
+                                                ${whatsappText}: ${whatsappNumber}
+                                            </div>
+                                        </div>
+                                        
+                                        <div class="w-1/3 flex justify-end">
+                                            <img src="${posterUrl}" class="w-64 h-auto rounded-lg shadow-2xl border-2 border-white/20 rotate-poster-reverse" alt="Poster">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                    break;
+                    
+                case 9: // Redesigned Layout 9 - Elegant Showcase
+                    bannerHTML = `
+                        <div class="relative w-full h-full bg-[#0c0c0c]">
+                            <div class="absolute inset-0">
+                                <div class="w-full h-full bg-[url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI2MCIgaGVpZ2h0PSI2MCI+CiAgPHBhdGggZD0iTTAgMGg2MHY2MEgweiIgZmlsbD0ibm9uZSIvPgogIDxwYXRoIGQ9Ik0zMCAzMG0tMiAwYTIgMiAwIDEgMCA0IDBhMiAyIDAgMSAwIC00IDBNNjAgNjBIMFYwaDYweiIgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjMjIyIiBzdHJva2Utb3BhY2l0eT0iMC4wNSIgc3Ryb2tlLXdpZHRoPSIwLjUiLz4KPC9zdmc+')] opacity-40"></div>
+                            </div>
+                            
+                            <div class="absolute inset-0 flex flex-col">
+                                <div class="h-1/2 w-full overflow-hidden relative">
+                                    <img src="${backdropUrl}" class="w-full h-full object-cover" alt="Background">
+                                    <div class="absolute inset-0 bg-gradient-to-b from-transparent to-[#0c0c0c]"></div>
+                                </div>
+                                <div class="h-1/2"></div>
+                            </div>
+                            
+                            ${logoImage ? `<img src="${logoImage}" class="logo top-8 right-8 z-10" alt="Logo">` : ''}
+                            
+                            <div class="absolute top-1/3 left-0 w-full transform -translate-y-1/2">
+                                <div class="text-center">
+                                    ${createTitleElement('large', 'text-shadow-xl mx-auto')}
+                                    
+                                    <div class="flex justify-center items-center mb-4 space-x-6">
+                                        <span class="rating text-xl">${rating}</span>
+                                        <span class="quality-badge text-xl">${quality}</span>
+                                        <span class="text-xl text-gray-300">${year}</span>
+                                    </div>
+                                    
+                                    ${genres ? `<div class="text-xl text-gray-400 mb-6">${genres}</div>` : ''}
+                                </div>
+                            </div>
+                            
+                            <div class="absolute bottom-0 left-0 w-full p-16 flex justify-between items-end">
+                                <div class="max-w-2xl">
+                                    <p class="text-xl text-gray-300 mb-8 line-clamp-3">${currentMovie.overview}</p>
+                                    
+                                    <div class="whatsapp-button text-xl inline-flex items-center px-6 py-3 rounded-md">
+                                        <i class="fab fa-whatsapp mr-2 text-2xl"></i>
+                                        ${whatsappText}: ${whatsappNumber}
+                                    </div>
+                                </div>
+                                
+                                <div>
+                                    <img src="${posterUrl}" class="w-72 h-auto rounded-lg shadow-2xl border border-white/20 poster-shadow" alt="Poster">
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                    break;
+                    
+                case 10: // Redesigned Layout 10 - Premium Blockbuster
+                    bannerHTML = `
+                        <div class="relative w-full h-full bg-gradient-to-b from-[#000510] to-[#001336]">
+                            <div class="absolute top-0 left-0 w-full h-full overflow-hidden">
+                                <img src="${backdropUrl}" class="w-full h-full object-cover opacity-40" alt="Background">
+                                <div class="absolute inset-0 bg-gradient-to-t from-[#001336] via-transparent to-[#000510]"></div>
+                            </div>
+                            
+                            <div class="absolute inset-0">
+                                <svg width="100%" height="100%" xmlns="http://www.w3.org/2000/svg">
+                                    <defs>
+                                        <pattern id="diagonalLines" patternUnits="userSpaceOnUse" width="40" height="40" patternTransform="rotate(45)">
+                                            <line x1="0" y1="0" x2="0" y2="40" stroke="rgba(255,255,255,0.03)" stroke-width="1" />
+                                        </pattern>
+                                    </defs>
+                                    <rect width="100%" height="100%" fill="url(#diagonalLines)" />
+                                </svg>
+                            </div>
+                            
+                            ${logoImage ? `<img src="${logoImage}" class="logo top-8 left-8 z-10" alt="Logo">` : ''}
+                            
+                            <div class="absolute top-0 left-0 w-full h-full flex flex-col">
+                                <div class="flex-1 flex items-center justify-center p-16">
+                                    <div class="text-center max-w-4xl">
+                                        <span class="inline-block bg-accent px-4 py-1 text-black font-bold rounded-sm text-lg mb-6 tracking-wider">MAXPLAY EXCLUSIVO</span>
+                                        ${createTitleElement('large', 'text-shadow-2xl mx-auto')}
+                                        
+                                        <div class="flex justify-center items-center mb-8 space-x-6">
+                                            <span class="rating text-xl">${rating}</span>
+                                            <span class="quality-badge text-xl">${quality}</span>
+                                            <span class="text-xl text-gray-300">${year}</span>
+                                            ${genres ? `<span class="text-xl text-gray-300">| ${genres}</span>` : ''}
+                                        </div>
+                                        
+                                        <p class="text-xl text-gray-300 mb-10 line-clamp-2 max-w-3xl mx-auto">${currentMovie.overview}</p>
+                                    </div>
+                                </div>
+                                
+                                <div class="h-1/3 relative">
+                                    <div class="absolute -top-20 left-0 w-full flex justify-center">
+                                        <img src="${posterUrl}" class="h-96 w-auto rounded-lg shadow-2xl border-2 border-white/20 poster-shadow" alt="Poster">
+                                    </div>
+                                    
+                                    <div class="absolute bottom-12 left-0 w-full flex justify-center">
+                                        <div class="whatsapp-button text-xl inline-flex items-center px-8 py-4 rounded-md shadow-lg">
+                                            <i class="fab fa-whatsapp mr-3 text-2xl"></i>
+                                            ${whatsappText}: ${whatsappNumber}
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                    break;
+            }
+            
+            bannerPreview.innerHTML = bannerHTML;
+            bannerContainer.innerHTML = bannerHTML;
+        }
+        
+        function setActiveTab(tabNumber) {
+            currentLayout = tabNumber;
+            tabs.forEach((tab, index) => {
+                if (index + 1 === tabNumber) {
+                    tab.classList.add('active');
+                } else {
+                    tab.classList.remove('active');
+                }
+            });
+        }
+        
+        function handleLogoUpload(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+            
+            if (!file.type.match('image/png')) {
+                alert('Por favor, selecione uma imagem PNG.');
+                return;
+            }
+            
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                logoImage = e.target.result;
+                logoImageElement.src = logoImage;
+                logoPreview.classList.remove('hidden');
+                updateBannerPreview();
+            };
+            reader.readAsDataURL(file);
+        }
+        
+        async function generateAndDownloadBanner() {
+            if (!currentMovie) {
+                alert('Por favor, selecione um filme ou série primeiro.');
+                return;
+            }
+            
+            try {
+                generateButton.disabled = true;
+                generateButton.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i>Gerando...';
+                
+                // Wait for images to load
+                await new Promise(resolve => setTimeout(resolve, 500));
+                
+                const canvas = await html2canvas(bannerContainer, {
+                    scale: 1,
+                    allowTaint: true,
+                    useCORS: true,
+                    backgroundColor: null
+                });
+                
+                const link = document.createElement('a');
+                link.download = `maxplay-banner-${currentMovie.title.replace(/[^a-z0-9]/gi, '-').toLowerCase()}.png`;
+                link.href = canvas.toDataURL('image/png');
+                link.click();
+                
+                generateButton.disabled = false;
+                generateButton.innerHTML = '<i class="fas fa-magic mr-2"></i>Gerar e Baixar Banner';
+            } catch (error) {
+                console.error('Error generating banner:', error);
+                alert('Ocorreu um erro ao gerar o banner. Por favor, tente novamente.');
+                generateButton.disabled = false;
+                generateButton.innerHTML = '<i class="fas fa-magic mr-2"></i>Gerar e Baixar Banner';
+            }
+        }
+        
+        function showLoading() {
+            initialState.classList.add('hidden');
+            contentContainer.classList.add('hidden');
+            loadingElement.classList.remove('hidden');
+        }
+        
+        function hideLoading() {
+            loadingElement.classList.add('hidden');
+        }
+        
+        function showContent() {
+            hideLoading();
+            initialState.classList.add('hidden');
+            contentContainer.classList.remove('hidden');
+            contentContainer.classList.add('fade-in');
+        }
+    </script>
+</body>
+</html>
