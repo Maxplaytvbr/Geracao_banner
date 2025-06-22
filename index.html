@@ -411,6 +411,88 @@
         #banner-container::after {
             content: none !important;
         }
+
+        /* Modal de visualização em tela cheia */
+        .fullscreen-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.9);
+            z-index: 1000;
+            overflow: auto;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .fullscreen-content {
+            position: relative;
+            max-width: 90%;
+            max-height: 90%;
+        }
+
+        .fullscreen-banner {
+            max-width: 100%;
+            max-height: 80vh;
+            object-fit: contain;
+        }
+
+        .close-modal {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            color: white;
+            font-size: 30px;
+            cursor: pointer;
+            background-color: rgba(0, 0, 0, 0.5);
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 10px;
+            margin-top: 20px;
+            justify-content: center;
+        }
+
+        .action-buttons button {
+            padding: 10px 20px;
+            border-radius: 5px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .generate-btn {
+            background-color: var(--accent);
+            color: black;
+        }
+
+        .download-btn {
+            background-color: #25D366;
+            color: white;
+        }
+
+        .preview-btn {
+            background-color: #3498db;
+            color: white;
+        }
+
+        .generate-btn:hover, .download-btn:hover, .preview-btn:hover {
+            opacity: 0.9;
+            transform: translateY(-2px);
+        }
+
+        .download-btn.hidden {
+            display: none;
+        }
     </style>
 </head>
 <body>
@@ -519,9 +601,15 @@
                                 </div>
                             </div>
                             
-                            <div class="flex justify-center">
-                                <button id="generate-button" class="bg-accent text-black px-8 py-3 rounded-full font-bold text-lg shadow-lg hover:bg-orange-500 transition-all flex items-center">
-                                    <i class="fas fa-magic mr-2"></i>Gerar e Baixar Banner
+                            <div class="action-buttons">
+                                <button id="generate-button" class="generate-btn">
+                                    <i class="fas fa-magic mr-2"></i>Gerar Banner
+                                </button>
+                                <button id="preview-button" class="preview-btn hidden">
+                                    <i class="fas fa-expand mr-2"></i>Visualizar
+                                </button>
+                                <button id="download-button" class="download-btn hidden">
+                                    <i class="fas fa-download mr-2"></i>Download
                                 </button>
                             </div>
                         </div>
@@ -542,6 +630,14 @@
         </div>
     </main>
 
+    <!-- Modal de visualização em tela cheia -->
+    <div id="fullscreen-modal" class="fullscreen-modal">
+        <div class="fullscreen-content">
+            <span class="close-modal">&times;</span>
+            <img id="fullscreen-banner" class="fullscreen-banner" src="" alt="Banner em tela cheia">
+        </div>
+    </div>
+
     <!-- Hidden banner container for generation -->
     <div id="banner-container" class="banner-container fixed top-0 left-0 -z-50 opacity-0"></div>
 
@@ -555,6 +651,7 @@
         let logoImage = null;
         let whatsappNumber = "(11) 99999-9999";
         let whatsappText = "Assine agora";
+        let generatedBannerData = null;
         
         // DOM Elements
         const searchInput = document.getElementById('search-input');
@@ -566,6 +663,8 @@
         const bannerPreview = document.getElementById('banner-preview');
         const bannerContainer = document.getElementById('banner-container');
         const generateButton = document.getElementById('generate-button');
+        const previewButton = document.getElementById('preview-button');
+        const downloadButton = document.getElementById('download-button');
         const logoUpload = document.getElementById('logo-upload');
         const logoPreview = document.getElementById('logo-preview');
         const logoImageElement = document.getElementById('logo-image');
@@ -577,6 +676,9 @@
         const headerWhatsapp = document.getElementById('header-whatsapp');
         const movieLogoPreview = document.getElementById('movie-logo-preview');
         const movieLogoPreviewImg = document.getElementById('movie-logo-preview-img');
+        const fullscreenModal = document.getElementById('fullscreen-modal');
+        const fullscreenBanner = document.getElementById('fullscreen-banner');
+        const closeModal = document.querySelector('.close-modal');
         
         // Tab elements
         const tabs = [];
@@ -587,7 +689,10 @@
         // Event Listeners
         searchInput.addEventListener('input', debounce(handleSearchInput, 500));
         searchButton.addEventListener('click', () => handleSearch(searchInput.value));
-        generateButton.addEventListener('click', generateAndDownloadBanner);
+        generateButton.addEventListener('click', generateBanner);
+        previewButton.addEventListener('click', showFullscreenPreview);
+        downloadButton.addEventListener('click', downloadBanner);
+        closeModal.addEventListener('click', hideFullscreenPreview);
         
         tabs.forEach((tab, index) => {
             tab.addEventListener('click', () => {
@@ -685,7 +790,7 @@
                 resultItem.innerHTML = `
                     <div class="flex items-center">
                         ${item.poster_path 
-                            ? `<img src="${IMAGE_BASE_URL}w92${item.poster_path}" alt="${title}" class="w-10 h-15 object-cover rounded mr-3" crossorigin="anonymous">` 
+                            ? `<img src="${IMAGE_BASE_URL}w92${item.poster_path}" alt="${title}" class="w-10 h-15 object-cover rounded mr-3">` 
                             : `<div class="w-10 h-15 bg-gray-700 rounded mr-3 flex items-center justify-center"><i class="fas fa-film"></i></div>`
                         }
                         <div>
@@ -849,7 +954,7 @@
             const createTitleElement = (size = 'normal', additionalClasses = '') => {
                 if (logoUrl) {
                     const sizeClass = size === 'large' ? 'movie-logo-lg' : 'movie-logo';
-                    return `<img src="${logoUrl}" alt="${currentMovie.title}" class="${sizeClass} ${additionalClasses} logo-glow mb-6" crossorigin="anonymous">`;
+                    return `<img src="${logoUrl}" alt="${currentMovie.title}" class="${sizeClass} ${additionalClasses} logo-glow mb-6">`;
                 } else {
                     const sizeClass = size === 'large' ? 'text-7xl' : 'text-6xl';
                     return `<h1 class="${sizeClass} font-bold mb-6 ${additionalClasses}">${currentMovie.title}</h1>`;
@@ -862,14 +967,14 @@
                 case 1:
                     bannerHTML = `
                         <div class="relative w-full h-full">
-                            <img src="${backdropUrl}" class="w-full h-full object-cover" alt="Background" crossorigin="anonymous">
+                            <img src="${backdropUrl}" class="w-full h-full object-cover" alt="Background">
                             <div class="banner-overlay"></div>
                             
-                            ${logoImage ? `<img src="${logoImage}" class="logo top-8 left-8" alt="Logo" crossorigin="anonymous">` : ''}
+                            ${logoImage ? `<img src="${logoImage}" class="logo top-8 left-8" alt="Logo">` : ''}
                             
                             <div class="absolute bottom-0 left-0 w-full p-12">
                                 <div class="flex">
-                                    <img src="${posterUrl}" class="w-80 h-auto rounded-lg shadow-2xl" alt="Poster" crossorigin="anonymous">
+                                    <img src="${posterUrl}" class="w-80 h-auto rounded-lg shadow-2xl" alt="Poster">
                                     <div class="ml-8 mt-4">
                                         ${createTitleElement('large')}
                                         <div class="flex items-center mb-6">
@@ -892,10 +997,10 @@
                 case 2:
                     bannerHTML = `
                         <div class="relative w-full h-full">
-                            <img src="${posterUrl}" class="w-full h-full object-cover" alt="Poster" crossorigin="anonymous">
+                            <img src="${posterUrl}" class="w-full h-full object-cover" alt="Poster">
                             <div class="absolute inset-0 bg-gradient-to-t from-black via-transparent to-black"></div>
                             
-                            ${logoImage ? `<img src="${logoImage}" class="logo top-8 right-8" alt="Logo" crossorigin="anonymous">` : ''}
+                            ${logoImage ? `<img src="${logoImage}" class="logo top-8 right-8" alt="Logo">` : ''}
                             
                             <div class="absolute top-0 left-0 w-full h-full flex flex-col justify-between p-12">
                                 <div class="flex justify-between items-start">
@@ -921,10 +1026,10 @@
                 case 3: // Redesigned Layout 3 - Cinematic Experience
                     bannerHTML = `
                         <div class="relative w-full h-full bg-black">
-                            <img src="${backdropUrl}" class="w-full h-full object-cover opacity-80" alt="Background" crossorigin="anonymous">
+                            <img src="${backdropUrl}" class="w-full h-full object-cover opacity-80" alt="Background">
                             <div class="absolute inset-0 bg-gradient-to-r from-black via-transparent to-black"></div>
                             
-                            ${logoImage ? `<img src="${logoImage}" class="logo top-8 right-8" alt="Logo" crossorigin="anonymous">` : ''}
+                            ${logoImage ? `<img src="${logoImage}" class="logo top-8 right-8" alt="Logo">` : ''}
                             
                             <div class="absolute top-0 left-0 w-full h-full flex items-center">
                                 <div class="w-1/2 pl-16">
@@ -949,7 +1054,7 @@
                                 
                                 <div class="w-1/2 flex justify-center items-center">
                                     <div class="relative">
-                                        <img src="${posterUrl}" class="w-96 h-auto rounded-lg shadow-2xl rotate-poster poster-shadow-accent" alt="Poster" crossorigin="anonymous">
+                                        <img src="${posterUrl}" class="w-96 h-auto rounded-lg shadow-2xl rotate-poster poster-shadow-accent" alt="Poster">
                                         <div class="absolute -bottom-4 w-full h-20 bg-gradient-to-t from-black to-transparent"></div>
                                     </div>
                                 </div>
@@ -964,11 +1069,11 @@
                             <div class="absolute inset-0 flex">
                                 <div class="w-1/2 h-full overflow-hidden relative">
                                     <div class="absolute inset-0 bg-gradient-to-r from-[#050714]/80 to-transparent"></div>
-                                    <img src="${posterUrl}" class="w-full h-full object-cover" alt="Poster" crossorigin="anonymous">
+                                    <img src="${posterUrl}" class="w-full h-full object-cover" alt="Poster">
                                 </div>
                                 <div class="w-1/2 h-full overflow-hidden relative">
                                     <div class="absolute inset-0 bg-gradient-to-l from-[#050714]/80 to-transparent"></div>
-                                    <img src="${backdropUrl}" class="w-full h-full object-cover" alt="Background" crossorigin="anonymous">
+                                    <img src="${backdropUrl}" class="w-full h-full object-cover" alt="Background">
                                 </div>
                             </div>
                             
@@ -991,7 +1096,7 @@
                                 </div>
                             </div>
                             
-                            ${logoImage ? `<img src="${logoImage}" class="logo top-8 left-8" alt="Logo" crossorigin="anonymous">` : ''}
+                            ${logoImage ? `<img src="${logoImage}" class="logo top-8 left-8" alt="Logo">` : ''}
                         </div>
                     `;
                     break;
@@ -1000,9 +1105,9 @@
                     bannerHTML = `
                         <div class="relative w-full h-full">
                             <div class="absolute inset-0 bg-gradient-to-b from-black via-transparent to-black"></div>
-                            <img src="${backdropUrl}" class="w-full h-full object-cover" alt="Background" crossorigin="anonymous">
+                            <img src="${backdropUrl}" class="w-full h-full object-cover" alt="Background">
                             
-                            ${logoImage ? `<img src="${logoImage}" class="logo bottom-8 left-8" alt="Logo" crossorigin="anonymous">` : ''}
+                            ${logoImage ? `<img src="${logoImage}" class="logo bottom-8 left-8" alt="Logo">` : ''}
                             
                             <div class="absolute top-0 left-0 w-full h-full flex flex-col p-12">
                                 <div class="flex-1 flex items-center justify-center">
@@ -1017,7 +1122,7 @@
                                 </div>
                                 
                                 <div class="flex items-end">
-                                    <img src="${posterUrl}" class="w-72 h-auto rounded-lg shadow-2xl" alt="Poster" crossorigin="anonymous">
+                                    <img src="${posterUrl}" class="w-72 h-auto rounded-lg shadow-2xl" alt="Poster">
                                     <div class="ml-8">
                                         <p class="text-2xl text-gray-300 mb-8 line-clamp-3">${currentMovie.overview}</p>
                                         <div class="whatsapp-button text-2xl">
@@ -1046,16 +1151,16 @@
                             </div>
                             
                             <div class="absolute top-0 left-0 w-full h-2/3 overflow-hidden">
-                                <img src="${backdropUrl}" class="w-full h-full object-cover opacity-60" alt="Background" crossorigin="anonymous">
+                                <img src="${backdropUrl}" class="w-full h-full object-cover opacity-60" alt="Background">
                                 <div class="absolute inset-0 bg-gradient-to-b from-transparent to-[#0f172a]"></div>
                             </div>
                             
-                            ${logoImage ? `<img src="${logoImage}" class="logo top-8 right-8 z-10" alt="Logo" crossorigin="anonymous">` : ''}
+                            ${logoImage ? `<img src="${logoImage}" class="logo top-8 right-8 z-10" alt="Logo">` : ''}
                             
                             <div class="absolute bottom-0 left-0 w-full p-16">
                                 <div class="flex items-end">
                                     <div class="relative mr-12">
-                                        <img src="${posterUrl}" class="w-80 h-auto rounded-lg shadow-2xl border-2 border-white/10 poster-shadow" alt="Poster" crossorigin="anonymous">
+                                        <img src="${posterUrl}" class="w-80 h-auto rounded-lg shadow-2xl border-2 border-white/10 poster-shadow" alt="Poster">
                                         <div class="absolute -top-6 -right-6 bg-accent text-black font-bold text-xl px-4 py-2 rounded-full shadow-lg">
                                             ${quality}
                                         </div>
@@ -1090,11 +1195,11 @@
                             <div class="cinematic-bars cinematic-bottom"></div>
                             
                             <div class="absolute top-[10%] left-0 w-full h-[80%] overflow-hidden">
-                                <img src="${backdropUrl}" class="w-full h-full object-cover" alt="Background" crossorigin="anonymous">
+                                <img src="${backdropUrl}" class="w-full h-full object-cover" alt="Background">
                                 <div class="absolute inset-0 bg-gradient-to-r from-black via-transparent to-black opacity-90"></div>
                             </div>
                             
-                            ${logoImage ? `<img src="${logoImage}" class="logo top-[15%] right-8 z-10" alt="Logo" crossorigin="anonymous">` : ''}
+                            ${logoImage ? `<img src="${logoImage}" class="logo top-[15%] right-8 z-10" alt="Logo">` : ''}
                             
                             <div class="absolute top-[10%] left-0 w-full h-[80%] flex">
                                 <div class="w-1/2 p-16 flex flex-col justify-center">
@@ -1119,7 +1224,7 @@
                                 
                                 <div class="w-1/2 flex items-center justify-center">
                                     <div class="relative floating">
-                                        <img src="${posterUrl}" class="w-96 h-auto rounded-md shadow-2xl border-4 border-white/10" alt="Poster" crossorigin="anonymous">
+                                        <img src="${posterUrl}" class="w-96 h-auto rounded-md shadow-2xl border-4 border-white/10" alt="Poster">
                                         <div class="absolute -bottom-6 left-1/2 transform -translate-x-1/2 bg-black/80 backdrop-blur px-6 py-2 rounded-full border border-white/20 text-lg">
                                             ${currentMovie.mediaType === 'movie' ? 'FILME' : 'SÉRIE'}
                                         </div>
@@ -1134,9 +1239,9 @@
                     bannerHTML = `
                         <div class="relative w-full h-full bg-gradient-to-br from-[#1a103d] via-[#311d5e] to-[#1a103d]">
                             <div class="absolute inset-0 opacity-30">
-                                <svg width="100%" height="100%" xmlns="http://www.w3.org/2000/svg">
+                                <svg width="100%" height="100%">
                                     <defs>
-                                        <pattern id="dots" patternUnits="userSpaceOnUse" width="20" height="20">
+                                        <pattern id="dots" width="20" height="20" patternUnits="userSpaceOnUse">
                                             <circle cx="10" cy="10" r="1" fill="rgba(255,255,255,0.3)" />
                                         </pattern>
                                     </defs>
@@ -1145,16 +1250,16 @@
                             </div>
                             
                             <div class="absolute top-0 right-0 w-2/3 h-full overflow-hidden opacity-40">
-                                <img src="${backdropUrl}" class="w-full h-full object-cover" alt="Background" crossorigin="anonymous">
+                                <img src="${backdropUrl}" class="w-full h-full object-cover" alt="Background">
                                 <div class="absolute inset-0 bg-gradient-to-l from-transparent to-[#1a103d]"></div>
                             </div>
                             
-                            ${logoImage ? `<img src="${logoImage}" class="logo top-8 left-8 z-10" alt="Logo" crossorigin="anonymous">` : ''}
+                            ${logoImage ? `<img src="${logoImage}" class="logo top-8 left-8 z-10" alt="Logo">` : ''}
                             
                             <div class="absolute top-0 left-0 w-full h-full flex flex-col justify-center p-16">
                                 <div class="max-w-5xl">
                                     ${logoUrl 
-                                        ? `<img src="${logoUrl}" alt="${currentMovie.title}" class="movie-logo-lg logo-glow mb-8 max-w-2xl" crossorigin="anonymous">` 
+                                        ? `<img src="${logoUrl}" alt="${currentMovie.title}" class="movie-logo-lg logo-glow mb-8 max-w-2xl">` 
                                         : `<h1 class="font-poppins text-7xl font-bold mb-8 text-transparent bg-clip-text bg-gradient-to-r from-white via-purple-200 to-white">${currentMovie.title}</h1>`
                                     }
                                     
@@ -1176,7 +1281,7 @@
                                         </div>
                                         
                                         <div class="w-1/3 flex justify-end">
-                                            <img src="${posterUrl}" class="w-64 h-auto rounded-lg shadow-2xl border-2 border-white/20 rotate-poster-reverse" alt="Poster" crossorigin="anonymous">
+                                            <img src="${posterUrl}" class="w-64 h-auto rounded-lg shadow-2xl border-2 border-white/20 rotate-poster-reverse" alt="Poster">
                                         </div>
                                     </div>
                                 </div>
@@ -1194,13 +1299,13 @@
                             
                             <div class="absolute inset-0 flex flex-col">
                                 <div class="h-1/2 w-full overflow-hidden relative">
-                                    <img src="${backdropUrl}" class="w-full h-full object-cover" alt="Background" crossorigin="anonymous">
+                                    <img src="${backdropUrl}" class="w-full h-full object-cover" alt="Background">
                                     <div class="absolute inset-0 bg-gradient-to-b from-transparent to-[#0c0c0c]"></div>
                                 </div>
                                 <div class="h-1/2"></div>
                             </div>
                             
-                            ${logoImage ? `<img src="${logoImage}" class="logo top-8 right-8 z-10" alt="Logo" crossorigin="anonymous">` : ''}
+                            ${logoImage ? `<img src="${logoImage}" class="logo top-8 right-8 z-10" alt="Logo">` : ''}
                             
                             <div class="absolute top-1/3 left-0 w-full transform -translate-y-1/2">
                                 <div class="text-center">
@@ -1227,7 +1332,7 @@
                                 </div>
                                 
                                 <div>
-                                    <img src="${posterUrl}" class="w-72 h-auto rounded-lg shadow-2xl border border-white/20 poster-shadow" alt="Poster" crossorigin="anonymous">
+                                    <img src="${posterUrl}" class="w-72 h-auto rounded-lg shadow-2xl border border-white/20 poster-shadow" alt="Poster">
                                 </div>
                             </div>
                         </div>
@@ -1238,7 +1343,7 @@
                     bannerHTML = `
                         <div class="relative w-full h-full bg-gradient-to-b from-[#000510] to-[#001336]">
                             <div class="absolute top-0 left-0 w-full h-full overflow-hidden">
-                                <img src="${backdropUrl}" class="w-full h-full object-cover opacity-40" alt="Background" crossorigin="anonymous">
+                                <img src="${backdropUrl}" class="w-full h-full object-cover opacity-40" alt="Background">
                                 <div class="absolute inset-0 bg-gradient-to-t from-[#001336] via-transparent to-[#000510]"></div>
                             </div>
                             
@@ -1253,7 +1358,7 @@
                                 </svg>
                             </div>
                             
-                            ${logoImage ? `<img src="${logoImage}" class="logo top-8 left-8 z-10" alt="Logo" crossorigin="anonymous">` : ''}
+                            ${logoImage ? `<img src="${logoImage}" class="logo top-8 left-8 z-10" alt="Logo">` : ''}
                             
                             <div class="absolute top-0 left-0 w-full h-full flex flex-col">
                                 <div class="flex-1 flex items-center justify-center p-16">
@@ -1274,7 +1379,7 @@
                                 
                                 <div class="h-1/3 relative">
                                     <div class="absolute -top-20 left-0 w-full flex justify-center">
-                                        <img src="${posterUrl}" class="h-96 w-auto rounded-lg shadow-2xl border-2 border-white/20 poster-shadow" alt="Poster" crossorigin="anonymous">
+                                        <img src="${posterUrl}" class="h-96 w-auto rounded-lg shadow-2xl border-2 border-white/20 poster-shadow" alt="Poster">
                                     </div>
                                     
                                     <div class="absolute bottom-12 left-0 w-full flex justify-center">
@@ -1324,120 +1429,167 @@
             reader.readAsDataURL(file);
         }
         
-        async function generateAndDownloadBanner() {
+        async function generateBanner() {
             if (!currentMovie) {
                 alert('Por favor, selecione um filme ou série primeiro.');
                 return;
             }
-
+            
             try {
                 generateButton.disabled = true;
                 generateButton.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i>Gerando...';
 
-                // 1. Criar container temporário fora da tela
+                // Criar um container temporário
                 const tempContainer = document.createElement('div');
-                Object.assign(tempContainer.style, {
-                    position: 'fixed',
-                    top: '-9999px',
-                    left: '-9999px',
-                    width: '1080px',
-                    height: '1350px',
-                    backgroundColor: '#000',
-                    overflow: 'hidden'
-                });
+                tempContainer.style.position = 'fixed';
+                tempContainer.style.top = '0';
+                tempContainer.style.left = '0';
+                tempContainer.style.width = '1080px';
+                tempContainer.style.height = '1350px';
+                tempContainer.style.zIndex = '9999';
+                tempContainer.style.backgroundColor = '#000';
                 document.body.appendChild(tempContainer);
 
-                // 2. Clonar o conteúdo simplificado
-                const bannerClone = bannerContainer.cloneNode(true);
-                
-                // Simplificar efeitos CSS para o clone
-                bannerClone.querySelectorAll('*').forEach(el => {
-                    // Remover efeitos complexos
-                    const classes = el.className.split(' ');
-                    const filtered = classes.filter(c => !c.includes('shadow') && 
-                                                  !c.includes('glow') && 
-                                                  !c.includes('blur') &&
-                                                  !c.includes('gradient'));
-                    el.className = filtered.join(' ');
-                    
-                    // Garantir visibilidade
-                    el.style.opacity = '1';
-                    el.style.visibility = 'visible';
-                });
-                
-                tempContainer.appendChild(bannerClone);
+                // Clonar o conteúdo do banner
+                const bannerHTML = bannerContainer.innerHTML;
 
-                // 3. Função para carregar imagens com CORS
-                const loadImage = (img) => {
-                    return new Promise((resolve, reject) => {
-                        if (img.complete && img.naturalWidth !== 0) {
-                            resolve();
-                        } else {
-                            img.onload = () => resolve();
-                            img.onerror = () => {
-                                // Tentar fallback
-                                img.src = 'https://via.placeholder.com/500x750?text=Image+Error';
-                                resolve();
-                            };
-                            
-                            // Forçar CORS
-                            if (img.src.startsWith('http')) {
-                                img.crossOrigin = 'Anonymous';
-                                const newSrc = img.src + (img.src.includes('?') ? '&' : '?') + 'timestamp=' + Date.now();
-                                if (newSrc !== img.src) img.src = newSrc;
-                            }
-                        }
-                    });
-                };
-
-                // 4. Esperar todas as imagens
-                const images = tempContainer.querySelectorAll('img');
-                await Promise.all(Array.from(images).map(img => loadImage(img)));
-                
-                // 5. Tempo extra para renderização
-                await new Promise(resolve => setTimeout(resolve, 1500));
-
-                // 6. Configurações do html2canvas
-                const options = {
-                    scale: 2,
-                    useCORS: true,
-                    allowTaint: false,
-                    backgroundColor: null,
-                    logging: true,
-                    async: true,
-                    removeContainer: true,
-                    onclone: (clonedDoc) => {
-                        // Garantir que tudo está visível no clone
-                        clonedDoc.querySelectorAll('*').forEach(el => {
-                            el.style.opacity = '1';
-                            el.style.visibility = 'visible';
-                        });
+                // Extrair todos os URLs de imagem do HTML
+                const imageUrls = [];
+                const imageRegex = /<img[^>]+src="([^">]+)"/g;
+                let match;
+                while ((match = imageRegex.exec(bannerHTML))) {
+                    if (!match[1].startsWith('data:')) { // Ignorar imagens que já são base64
+                        imageUrls.push(match[1]);
                     }
-                };
+                }
 
-                // 7. Gerar canvas
-                const canvas = await html2canvas(tempContainer, options);
+                // Converter todas as imagens para Base64
+                const base64Promises = imageUrls.map(url => convertImageToBase64(url));
+                const base64Results = await Promise.all(base64Promises);
 
-                // 8. Criar e disparar download
-                const link = document.createElement('a');
-                link.download = `maxplay-banner-${currentMovie.title.replace(/[^a-z0-9]/gi, '-').toLowerCase()}-${Date.now()}.png`;
-                link.href = canvas.toDataURL('image/png');
-                document.body.appendChild(link);
-                link.click();
-                
-                // 9. Limpeza
-                setTimeout(() => {
-                    document.body.removeChild(link);
-                    document.body.removeChild(tempContainer);
-                }, 100);
+                // Substituir URLs por Base64 no HTML
+                let processedHTML = bannerHTML;
+                base64Results.forEach(({originalUrl, base64}) => {
+                    processedHTML = processedHTML.replace(new RegExp(originalUrl, 'g'), base64);
+                });
 
+                // Inserir o HTML processado no container temporário
+                tempContainer.innerHTML = processedHTML;
+
+                // Esperar todas as imagens carregarem
+                const images = tempContainer.querySelectorAll('img');
+                const imageLoadPromises = Array.from(images).map(img => {
+                    if (img.complete) return Promise.resolve();
+                    return new Promise((resolve, reject) => {
+                        img.onload = resolve;
+                        img.onerror = reject;
+                    });
+                });
+
+                await Promise.all(imageLoadPromises);
+                await new Promise(resolve => setTimeout(resolve, 500)); // Tempo extra para garantir
+
+                // Gerar o canvas
+                const canvas = await html2canvas(tempContainer, {
+                    scale: 2,
+                    logging: true,
+                    useCORS: true,
+                    allowTaint: true,
+                    backgroundColor: null
+                });
+
+                // Salvar os dados do banner gerado
+                generatedBannerData = canvas.toDataURL('image/png');
+
+                // Limpar e remover o container temporário
+                tempContainer.innerHTML = '';
+                document.body.removeChild(tempContainer);
+
+                // Mostrar botões de visualização e download
+                previewButton.classList.remove('hidden');
+                downloadButton.classList.remove('hidden');
+
+                generateButton.disabled = false;
+                generateButton.innerHTML = '<i class="fas fa-check mr-2"></i>Banner Gerado';
             } catch (error) {
                 console.error('Error generating banner:', error);
-                alert('Erro ao gerar banner. Se o problema persistir, tente com um navegador diferente ou verifique o console para detalhes.');
-            } finally {
+                alert('Ocorreu um erro ao gerar o banner: ' + error.message);
                 generateButton.disabled = false;
-                generateButton.innerHTML = '<i class="fas fa-magic mr-2"></i>Gerar e Baixar Banner';
+                generateButton.innerHTML = '<i class="fas fa-magic mr-2"></i>Gerar Banner';
             }
+        }
+
+        function showFullscreenPreview() {
+            if (!generatedBannerData) {
+                alert('Por favor, gere o banner primeiro.');
+                return;
+            }
+
+            fullscreenBanner.src = generatedBannerData;
+            fullscreenModal.style.display = 'flex';
+            document.body.style.overflow = 'hidden';
+        }
+
+        function hideFullscreenPreview() {
+            fullscreenModal.style.display = 'none';
+            document.body.style.overflow = 'auto';
+        }
+
+        function downloadBanner() {
+            if (!generatedBannerData) {
+                alert('Por favor, gere o banner primeiro.');
+                return;
+            }
+
+            const link = document.createElement('a');
+            link.download = `maxplay-banner-${currentMovie.title.replace(/[^a-z0-9]/gi, '-').toLowerCase()}.png`;
+            link.href = generatedBannerData;
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+        }
+
+        // Função para converter imagem para Base64
+        function convertImageToBase64(url) {
+            return new Promise((resolve, reject) => {
+                const img = new Image();
+                img.crossOrigin = 'Anonymous';
+                
+                img.onload = () => {
+                    try {
+                        const canvas = document.createElement('canvas');
+                        canvas.width = img.width;
+                        canvas.height = img.height;
+                        const ctx = canvas.getContext('2d');
+                        ctx.drawImage(img, 0, 0);
+                        
+                        // Verificar se a imagem é PNG ou JPEG
+                        const isPng = url.toLowerCase().includes('.png') || 
+                                      (img.src.toLowerCase().includes('.png') && !url.toLowerCase().includes('.jpg') && !url.toLowerCase().includes('.jpeg'));
+                        
+                        const mimeType = isPng ? 'image/png' : 'image/jpeg';
+                        const dataURL = canvas.toDataURL(mimeType);
+                        
+                        resolve({
+                            originalUrl: url,
+                            base64: dataURL
+                        });
+                    } catch (error) {
+                        reject(error);
+                    }
+                };
+                
+                img.onerror = () => {
+                    // Se falhar, retornar a URL original (melhor que nada)
+                    console.warn('Failed to convert image to Base64:', url);
+                    resolve({
+                        originalUrl: url,
+                        base64: url
+                    });
+                };
+                
+                img.src = url;
+            });
         }
         
         function showLoading() {
