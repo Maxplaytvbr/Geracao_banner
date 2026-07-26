@@ -1,0 +1,410 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<meta name="theme-color" content="#ff6b00">
+<title>MaxPlay — Assista mais, pague menos</title>
+<meta name="description" content="MaxPlay: canais, filmes, séries, animes, esportes e muito mais em uma só plataforma. Planos a partir de R$ 35.">
+<link rel="icon" href="https://i.postimg.cc/Qts9LLyC/65FA9AE8-3BF9-4980-A679-8C3AF56B6BC5.jpg">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@400;500;600;700&family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{--o:#ff6b00;--o2:#ff8a2a;--bg:#060a10;--panel:#0d1520;--panel2:#121d2a;--line:rgba(255,255,255,.09);--muted:#94a3b3;--text:#f8fafc;--green:#25d366;--r:22px;--shadow:0 20px 65px rgba(0,0,0,.45)}
+html{scroll-behavior:smooth}
+body{font-family:Poppins,sans-serif;color:var(--text);background:var(--bg);overflow-x:hidden;-webkit-font-smoothing:antialiased}
+body.lock{overflow:hidden}
+a{text-decoration:none;color:inherit}
+button,input{font:inherit}
+img{max-width:100%;display:block}
+.container{width:min(1180px,calc(100% - 32px));margin:auto}
+.section{padding:94px 0;position:relative}
+.kicker{display:inline-flex;align-items:center;gap:8px;padding:7px 12px;border:1px solid rgba(255,107,0,.28);background:rgba(255,107,0,.10);color:var(--o);border-radius:999px;font-size:10px;font-weight:800;letter-spacing:.1em;text-transform:uppercase}
+.title{font-size:clamp(32px,5vw,58px);line-height:1.03;margin-top:15px;max-width:850px}
+.sub{color:var(--muted);font-size:14px;line-height:1.75;max-width:760px;margin-top:14px}
+.btn{border:0;border-radius:15px;min-height:52px;padding:0 22px;display:inline-flex;align-items:center;justify-content:center;gap:9px;font-weight:800;font-size:13px;cursor:pointer;transition:.25s}
+.btn:hover{transform:translateY(-2px)}
+.btn-main{color:#fff;background:linear-gradient(135deg,var(--o),var(--o2));box-shadow:0 13px 32px rgba(255,107,0,.28);position:relative;overflow:hidden}
+.btn-main:before{content:"";position:absolute;top:-120%;left:-35%;width:28%;height:340%;background:linear-gradient(90deg,transparent,rgba(255,255,255,.8),transparent);transform:rotate(24deg);animation:shine 3.3s infinite}
+@keyframes shine{0%,58%{left:-40%}100%{left:125%}}
+.btn-ghost{color:#fff;background:rgba(255,255,255,.06);border:1px solid var(--line)}
+.btn-wa{background:var(--green);color:#fff}
+.center{text-align:center}.center .title,.center .sub{margin-left:auto;margin-right:auto}
+header{height:72px;position:fixed;inset:0 0 auto;z-index:50;background:rgba(6,10,16,.82);border-bottom:1px solid var(--line);backdrop-filter:blur(18px)}
+.nav{height:100%;display:flex;justify-content:space-between;align-items:center}
+.brand{display:flex;align-items:center;gap:11px}.brand img{width:42px;height:42px;border-radius:12px;object-fit:cover;box-shadow:0 8px 25px rgba(255,107,0,.2)}.brand b{font-size:17px}.brand b span{color:var(--o)}.brand small{display:block;font-size:8px;color:var(--muted);margin-top:-2px;letter-spacing:.08em}
+.links{display:flex;align-items:center;gap:22px}.links a{font-size:11px;font-weight:600;color:#bdc8d2}.links a:hover{color:#fff}.menu{display:none;width:42px;height:42px;border-radius:12px;border:1px solid var(--line);background:rgba(255,255,255,.06);color:#fff}
+
+/* HERO */
+.hero{min-height:100vh;padding:118px 0 70px;display:flex;align-items:center;position:relative;overflow:hidden}
+.hero-media{position:absolute;inset:0;z-index:-3}.hero-media img{width:100%;height:100%;object-fit:cover;opacity:.5}.hero-media:after{content:"";position:absolute;inset:0;background:linear-gradient(90deg,#060a10 0%,rgba(6,10,16,.96) 44%,rgba(6,10,16,.58) 76%,#060a10 100%),linear-gradient(0deg,#060a10 0%,transparent 52%)}
+.hero-grid{display:grid;grid-template-columns:1.08fr .92fr;gap:46px;align-items:center}
+.hero h1{font-family:'Bebas Neue';font-size:clamp(60px,8.5vw,108px);line-height:.86;letter-spacing:.005em;margin:20px 0 18px}.hero h1 span{color:var(--o)}
+.hero-copy{font-size:16px;line-height:1.72;color:#c7d1da;max-width:680px}
+.hero-actions{display:flex;flex-wrap:wrap;gap:10px;margin-top:27px}
+.compat-line{display:flex;align-items:center;flex-wrap:wrap;gap:14px;margin-top:24px;font-size:11px;color:#b9c5ce}.compat-line i{color:var(--o)}
+.hero-showcase{padding:13px;border:1px solid rgba(255,255,255,.13);border-radius:28px;background:linear-gradient(145deg,rgba(255,255,255,.11),rgba(255,255,255,.025));box-shadow:var(--shadow);position:relative}
+.hero-screen{aspect-ratio:16/10;border-radius:21px;overflow:hidden;position:relative;background:#111}.hero-screen img{width:100%;height:100%;object-fit:cover}.hero-screen:after{content:"";position:absolute;inset:0;background:linear-gradient(0deg,rgba(0,0,0,.9),transparent 65%)}
+.hero-screen-text{position:absolute;left:24px;right:24px;bottom:23px;z-index:2}.hero-screen-text b{display:block;font-size:20px}.hero-screen-text small{font-size:10px;color:#d0d7de}
+.float{position:absolute;padding:10px 13px;border-radius:14px;font-size:10px;font-weight:800;box-shadow:0 14px 35px rgba(0,0,0,.35)}.f1{right:20px;top:-12px;background:#fff;color:#10151c}.f2{left:-17px;bottom:35px;background:var(--o);color:#fff}
+
+/* DEVICE LOGOS */
+.devicebar{border-block:1px solid var(--line);background:rgba(255,255,255,.02)}
+.devicebar-inner{padding:25px 0;text-align:center}.devicebar p{font-size:11px;color:var(--muted);margin-bottom:18px}
+.device-logos{display:flex;align-items:center;justify-content:center;flex-wrap:wrap;gap:13px}
+.device-logo{height:48px;min-width:112px;padding:0 18px;border:1px solid var(--line);background:rgba(255,255,255,.035);border-radius:14px;display:flex;align-items:center;justify-content:center;gap:9px;font-weight:800;font-size:12px;color:#e6edf3}
+.device-logo img{height:21px;max-width:72px;filter:brightness(0) invert(1);opacity:.88}
+
+/* CATEGORY CARDS */
+.category-list{display:grid;gap:18px;margin-top:38px}
+.category{border-radius:26px;border:1px solid var(--line);background:linear-gradient(145deg,var(--panel2),#090f17);overflow:hidden;display:grid;grid-template-columns:320px 1fr;min-height:260px;position:relative}
+.category-copy{padding:30px;display:flex;flex-direction:column;justify-content:center;z-index:2}.category-copy i{font-size:22px;color:var(--o);margin-bottom:16px}.category-copy h3{font-size:24px}.category-copy p{font-size:12px;color:var(--muted);line-height:1.75;margin-top:10px}
+.mini-slider{overflow:hidden;position:relative;display:flex;align-items:center}.mini-slider:before{content:"";position:absolute;inset:0 auto 0 0;width:100px;background:linear-gradient(90deg,#0d1520,transparent);z-index:2}.mini-track{display:flex;gap:11px;width:max-content;animation:miniMove 38s linear infinite;padding:16px}.mini-track.reverse{animation-direction:reverse}.mini-track:hover{animation-play-state:paused}
+@keyframes miniMove{to{transform:translateX(-50%)}}
+.mini-poster{width:135px;flex:0 0 135px;border-radius:14px;overflow:hidden;border:1px solid var(--line);box-shadow:0 12px 25px rgba(0,0,0,.3)}.mini-poster img{width:100%;aspect-ratio:2/3;object-fit:cover}
+.generic-cover{width:135px;aspect-ratio:2/3;display:grid;place-items:center;text-align:center;padding:14px;border-radius:14px;background:radial-gradient(circle at 70% 20%,rgba(255,107,0,.35),transparent 28%),linear-gradient(145deg,#29202d,#0c1018);border:1px solid var(--line);font-size:13px;font-weight:800}.generic-cover i{font-size:28px;color:var(--o);margin-bottom:9px}
+
+/* STREAMING LOGOS */
+.logo-cloud{margin-top:35px;display:grid;grid-template-columns:repeat(6,1fr);gap:12px}
+.brand-tile{height:92px;border-radius:18px;border:1px solid var(--line);background:rgba(255,255,255,.035);display:flex;align-items:center;justify-content:center;padding:19px;transition:.25s}.brand-tile:hover{transform:translateY(-3px);background:rgba(255,255,255,.065)}.brand-tile img{max-height:34px;max-width:115px;filter:brightness(0) invert(1)}
+
+/* MARQUEE */
+.poster-marquee-wrap{margin-top:37px;display:grid;gap:13px;overflow:hidden}
+.poster-marquee{display:flex;gap:12px;width:max-content;animation:marqueeLeft 70s linear infinite}.poster-marquee.right{animation-name:marqueeRight}.poster-marquee:hover{animation-play-state:paused}
+@keyframes marqueeLeft{to{transform:translateX(-50%)}}@keyframes marqueeRight{from{transform:translateX(-50%)}to{transform:translateX(0)}}
+.marquee-poster{width:148px;flex:0 0 148px;border-radius:15px;overflow:hidden;border:1px solid var(--line);box-shadow:0 12px 30px rgba(0,0,0,.35)}.marquee-poster img{width:100%;aspect-ratio:2/3;object-fit:cover}
+
+/* COMPARISON */
+.compare{display:grid;grid-template-columns:1.1fr .9fr;gap:18px;margin-top:38px}
+.price-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:9px;padding:20px;border:1px solid var(--line);border-radius:24px;background:var(--panel)}
+.price-item{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:12px;border-radius:13px;background:rgba(255,255,255,.035);border:1px solid rgba(255,255,255,.05);font-size:10px}.price-item b{font-size:11px}.price-item span{color:#d7dee5;font-weight:700}
+.total-box{padding:30px;border-radius:24px;background:radial-gradient(circle at 85% 15%,rgba(255,107,0,.38),transparent 30%),linear-gradient(145deg,#17202c,#0a0f16);border:1px solid rgba(255,107,0,.32);display:flex;flex-direction:column;justify-content:center}
+.total-box .old{font-size:38px;font-weight:800;text-decoration:line-through;color:#7f8c98}.total-box .new{font-family:'Bebas Neue';font-size:80px;line-height:.9;color:var(--o);margin:10px 0}.total-box .new small{font-family:Poppins;font-size:13px;color:#fff}.total-box p{font-size:11px;color:var(--muted)}
+
+/* BENEFITS */
+.benefits{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:35px}.benefit{padding:22px;border:1px solid var(--line);border-radius:19px;background:linear-gradient(145deg,var(--panel2),var(--panel))}.benefit i{width:44px;height:44px;border-radius:13px;background:rgba(255,107,0,.12);display:grid;place-items:center;color:var(--o);font-size:18px}.benefit h3{font-size:15px;margin-top:16px}.benefit p{font-size:10px;color:var(--muted);line-height:1.65;margin-top:7px}
+
+/* TESTIMONIALS */
+.reviews{display:grid;grid-template-columns:repeat(3,1fr);gap:13px;margin-top:34px}.review{padding:23px;border-radius:19px;border:1px solid var(--line);background:var(--panel)}.stars{color:#ffc43d;font-size:11px}.review p{font-size:11px;color:#cad3dc;line-height:1.7;margin:12px 0 17px}.person{display:flex;align-items:center;gap:10px}.avatar{width:38px;height:38px;border-radius:50%;background:linear-gradient(135deg,var(--o),#ffb06c);display:grid;place-items:center;font-weight:800}.person b{font-size:11px}.person small{display:block;color:var(--muted);font-size:8px}
+
+/* PLANS */
+.plans{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-top:38px}.plan{padding:26px;border-radius:23px;background:linear-gradient(155deg,var(--panel2),var(--panel));border:1px solid var(--line);position:relative}.plan.hot{border-color:rgba(255,107,0,.58);box-shadow:0 20px 55px rgba(255,107,0,.12);transform:translateY(-8px)}.tag{position:absolute;right:15px;top:15px;padding:5px 9px;border-radius:999px;background:var(--o);font-size:8px;font-weight:800}.plan h3{font-size:18px}.plan-price{font-size:36px;font-weight:800;margin:12px 0}.plan-price small{font-size:10px;color:var(--muted);font-weight:500}.plan ul{list-style:none;display:grid;gap:9px;margin:19px 0 23px}.plan li{font-size:10px;color:#c4ced7;display:flex;gap:8px}.plan li i{color:#35d878;margin-top:2px}.plan .btn{width:100%}
+.test-banner{margin-top:17px;padding:22px;border-radius:20px;border:1px dashed rgba(255,107,0,.38);background:rgba(255,107,0,.07);display:flex;justify-content:space-between;align-items:center;gap:18px}.test-banner b{font-size:17px}.test-banner p{font-size:10px;color:var(--muted);margin-top:4px}
+
+/* FAQ FOOTER */
+.faq{display:grid;gap:10px;margin-top:34px}details{border:1px solid var(--line);border-radius:16px;background:var(--panel);padding:17px 18px}summary{font-size:12px;font-weight:700;cursor:pointer;list-style:none;display:flex;justify-content:space-between;gap:15px}summary:after{content:"+";font-size:18px;color:var(--o)}details[open] summary:after{content:"−"}details p{font-size:10px;color:var(--muted);line-height:1.7;margin-top:11px}
+.final-cta{margin-top:50px;padding:38px;border-radius:28px;border:1px solid rgba(255,107,0,.32);background:radial-gradient(circle at 90% 10%,rgba(255,107,0,.3),transparent 30%),linear-gradient(145deg,#17202c,#090e15);display:flex;justify-content:space-between;align-items:center;gap:24px}.final-cta h3{font-size:clamp(25px,4vw,44px);line-height:1.05}.final-cta p{font-size:11px;color:var(--muted);margin-top:9px}
+footer{padding:30px 0;border-top:1px solid var(--line);color:var(--muted);font-size:10px}.foot{display:flex;justify-content:space-between;align-items:center;gap:18px;flex-wrap:wrap}
+
+/* WIZARD */
+.modal{position:fixed;inset:0;z-index:100;display:none;place-items:center;padding:14px;background:rgba(0,0,0,.84);backdrop-filter:blur(13px);overflow:auto}.modal.show{display:grid}.wizard{width:min(700px,100%);min-height:565px;border:1px solid var(--line);border-radius:27px;background:linear-gradient(160deg,#111b28,#080d14);box-shadow:var(--shadow);overflow:hidden}.whead{height:70px;border-bottom:1px solid var(--line);display:flex;align-items:center;justify-content:space-between;padding:0 22px}.wbrand{display:flex;align-items:center;gap:10px}.wbrand img{width:38px;height:38px;border-radius:11px}.wbrand b{font-size:13px}.wbrand small{display:block;color:var(--muted);font-size:8px}.close{width:39px;height:39px;border-radius:11px;background:rgba(255,255,255,.05);border:1px solid var(--line);color:#fff}.progress{height:4px;background:rgba(255,255,255,.05)}.progress span{display:block;height:100%;width:16.6%;background:linear-gradient(90deg,var(--o),var(--o2));transition:.25s}.wbody{padding:26px;min-height:420px}.wstep{display:none;animation:up .25s}.wstep.active{display:block}@keyframes up{from{opacity:0;transform:translateY(7px)}to{opacity:1;transform:none}}.wk{font-size:9px;color:var(--o);font-weight:800;letter-spacing:.1em;text-transform:uppercase}.wizard h2{font-size:clamp(24px,5vw,35px);line-height:1.12;margin-top:8px}.wlead{font-size:11px;color:var(--muted);margin-top:9px}.field{margin-top:22px}.field label{display:block;font-size:10px;color:#cad3dc;margin-bottom:7px}.field input{width:100%;height:52px;border:1px solid var(--line);border-radius:14px;background:rgba(255,255,255,.05);color:#fff;padding:0 15px;outline:none}.field input:focus{border-color:var(--o);box-shadow:0 0 0 3px rgba(255,107,0,.1)}
+.options{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:20px}.option{min-height:78px;padding:13px;border:1px solid var(--line);border-radius:15px;background:rgba(255,255,255,.035);color:#fff;text-align:left;display:flex;gap:11px;align-items:center;cursor:pointer}.option:hover,.option.selected{border-color:var(--o);background:rgba(255,107,0,.1)}.option i{width:34px;height:34px;border-radius:10px;background:rgba(255,107,0,.12);display:grid;place-items:center;color:var(--o);flex:0 0 auto}.option b{display:block;font-size:11px}.option small{display:block;font-size:8px;color:var(--muted);margin-top:3px}.instruction{margin-top:20px;padding:18px;border:1px solid var(--line);border-radius:17px;background:rgba(255,255,255,.04)}.instruction ol{padding-left:19px;margin-top:10px;display:grid;gap:8px}.instruction li{font-size:10px;color:#c5cfd8}.code{margin-top:14px;padding:13px 15px;border:1px dashed rgba(255,107,0,.5);border-radius:13px;background:rgba(255,107,0,.07);display:flex;justify-content:space-between;align-items:center}.code strong{font-size:21px;color:var(--o);letter-spacing:.08em}.code button{border:0;background:rgba(255,255,255,.08);color:#fff;border-radius:9px;padding:8px 10px;font-size:9px}.summary{display:grid;gap:8px;margin-top:19px}.sumrow{display:flex;justify-content:space-between;gap:15px;padding:11px 13px;border-radius:12px;border:1px solid var(--line);background:rgba(255,255,255,.03);font-size:10px}.sumrow span{color:var(--muted)}.sumrow b{text-align:right}.wactions{padding:0 26px 24px;display:flex;justify-content:space-between;gap:10px}.hidden{display:none!important}.toast{position:fixed;z-index:200;left:50%;bottom:20px;transform:translate(-50%,20px);opacity:0;padding:11px 16px;border-radius:12px;border:1px solid var(--line);background:#111b28;font-size:10px;transition:.25s;pointer-events:none}.toast.show{opacity:1;transform:translate(-50%,0)}
+.note{font-size:9px;color:#6f7d89;margin-top:12px;line-height:1.6}
+
+@media(max-width:920px){.hero-grid,.compare{grid-template-columns:1fr}.category{grid-template-columns:1fr}.category-copy{padding-bottom:5px}.logo-cloud{grid-template-columns:repeat(3,1fr)}.benefits,.reviews{grid-template-columns:1fr 1fr}.plans{grid-template-columns:1fr}.plan.hot{transform:none}.links{display:none}.menu{display:block}.links.mobile{display:flex;position:absolute;top:80px;left:16px;right:16px;padding:15px;border:1px solid var(--line);border-radius:16px;background:#0d1520;flex-direction:column;align-items:stretch}.links.mobile .btn{width:100%}}
+@media(max-width:580px){.section{padding:70px 0}.hero{padding-top:105px}.hero h1{font-size:61px}.hero-actions .btn{width:100%}.float{display:none}.device-logo{min-width:96px}.category{min-height:auto}.category-copy{padding:23px}.mini-poster,.generic-cover{width:112px;flex-basis:112px}.logo-cloud{grid-template-columns:repeat(2,1fr)}.brand-tile{height:76px}.marquee-poster{width:118px;flex-basis:118px}.price-grid{grid-template-columns:1fr}.benefits,.reviews,.options{grid-template-columns:1fr}.test-banner,.final-cta{flex-direction:column;align-items:flex-start}.test-banner .btn,.final-cta .btn{width:100%}.wbody{padding:22px 18px}.wactions{padding:0 18px 20px}.wactions .btn{flex:1;min-width:0}.total-box .new{font-size:67px}}
+</style>
+</head>
+<body>
+<header>
+<div class="container nav">
+<a class="brand" href="#inicio"><img src="https://i.postimg.cc/Qts9LLyC/65FA9AE8-3BF9-4980-A679-8C3AF56B6BC5.jpg" alt="MaxPlay"><div><b>MAX<span>PLAY</span></b><small>ENTRETENIMENTO DIGITAL</small></div></a>
+<nav class="links" id="links"><a href="#conteudo">Conteúdos</a><a href="#vantagens">Vantagens</a><a href="#comparacao">Economia</a><a href="#planos">Planos</a><a href="#duvidas">Dúvidas</a><button class="btn btn-main" onclick="openWizard()">Quero assinar</button></nav>
+<button class="menu" onclick="toggleMenu()"><i class="fa-solid fa-bars"></i></button>
+</div>
+</header>
+
+<main>
+<section class="hero" id="inicio">
+<div class="hero-media"><img id="heroBackdrop" src="https://image.tmdb.org/t/p/original/2meX1nMdScFOoV4370rqHWKmXhY.jpg" alt=""></div>
+<div class="container hero-grid">
+<div>
+<span class="kicker"><i class="fa-solid fa-bolt"></i> Planos a partir de R$ 35</span>
+<h1>A FORMA MAIS INTELIGENTE DE ASSISTIR TV <span>SEM PAGAR CARO.</span></h1>
+<p class="hero-copy">Aproveite milhares de canais, filmes, séries, animes e conteúdos premium pagando muito menos. Com a MaxPlay você assiste tudo com qualidade, estabilidade e suporte de verdade.</p>
+<div class="hero-actions">
+<button class="btn btn-main" onclick="openWizard()"><i class="fa-solid fa-play"></i> Quero assinar MaxPlay</button>
+<a class="btn btn-ghost" href="#conteudo"><i class="fa-solid fa-chevron-down"></i> Ver tudo que está incluso</a>
+</div>
+<div class="compat-line"><span><i class="fa-solid fa-circle-check"></i> Smart TV</span><span><i class="fa-solid fa-circle-check"></i> Smartphone</span><span><i class="fa-solid fa-circle-check"></i> Tablet</span><span><i class="fa-solid fa-circle-check"></i> Computador</span></div>
+</div>
+<div class="hero-showcase">
+<div class="hero-screen"><img id="heroFeature" src="https://image.tmdb.org/t/p/original/8YFL5QQVPy3AgrEQxNYVSgiPEbe.jpg" alt=""><div class="hero-screen-text"><b id="heroTitle">Entretenimento sem limites</b><small>Filmes, séries, esportes e canais ao vivo</small></div></div>
+<div class="float f1"><i class="fa-solid fa-star" style="color:var(--o)"></i> Qualidade e estabilidade</div>
+<div class="float f2"><i class="fa-brands fa-whatsapp"></i> Suporte de verdade</div>
+</div>
+</div>
+</section>
+
+<section class="devicebar">
+<div class="container devicebar-inner">
+<p>Compatível com os dispositivos que você já usa</p>
+<div class="device-logos">
+<div class="device-logo"><img src="https://cdn.simpleicons.org/lg/ffffff" alt="LG"></div>
+<div class="device-logo"><img src="https://cdn.simpleicons.org/samsung/ffffff" alt="Samsung"></div>
+<div class="device-logo"><img src="https://cdn.simpleicons.org/android/ffffff" alt="Android"></div>
+<div class="device-logo"><img src="https://cdn.simpleicons.org/apple/ffffff" alt="Apple"></div>
+<div class="device-logo"><img src="https://cdn.simpleicons.org/amazonfiretv/ffffff" alt="Fire TV"></div>
+<div class="device-logo"><img src="https://cdn.simpleicons.org/roku/ffffff" alt="Roku"></div>
+<div class="device-logo"><img src="https://cdn.simpleicons.org/google/ffffff" alt="Google TV"></div>
+</div>
+</div>
+</section>
+
+<section class="section" id="conteudo">
+<div class="container center">
+<span class="kicker">A TV do futuro</span>
+<h2 class="title">O entretenimento que você ama, do jeito que sempre quis.</h2>
+<p class="sub">Online, sem antena, sem decodificadores e sem complicação. Escolha o que assistir e aproveite em seus dispositivos.</p>
+</div>
+<div class="container category-list">
+<article class="category"><div class="category-copy"><i class="fa-solid fa-film"></i><h3>Filmes incríveis</h3><p>Clássicos, estreias, grandes produções, títulos premiados e conteúdo atualizado em alta definição para curtir quando quiser.</p></div><div class="mini-slider"><div class="mini-track" id="moviesTrack"></div></div></article>
+<article class="category"><div class="category-copy"><i class="fa-solid fa-clapperboard"></i><h3>Séries imperdíveis</h3><p>Catálogo completo com temporadas para maratonar. Do dorama ao suspense, histórias para todos os gostos em um só lugar.</p></div><div class="mini-slider"><div class="mini-track reverse" id="seriesTrack"></div></div></article>
+<article class="category"><div class="category-copy"><i class="fa-solid fa-dragon"></i><h3>Animes e animações</h3><p>Aventuras, ação, fantasia e os universos mais queridos por fãs de todas as idades.</p></div><div class="mini-slider"><div class="mini-track" id="animeTrack"></div></div></article>
+<article class="category"><div class="category-copy"><i class="fa-solid fa-child-reaching"></i><h3>Conteúdo infantil</h3><p>Desenhos, filmes, canais educativos e muita diversão para os pequenos.</p></div><div class="mini-slider"><div class="mini-track reverse" id="kidsTrack"></div></div></article>
+<article class="category"><div class="category-copy"><i class="fa-solid fa-trophy"></i><h3>Esportes ao vivo</h3><p>Futebol, lutas, campeonatos, mesas-redondas e grandes eventos para quem não perde nenhum lance.</p></div><div class="mini-slider"><div class="mini-track" id="sportsTrack"><div class="generic-cover"><div><i class="fa-solid fa-futbol"></i><br>Futebol ao vivo</div></div><div class="generic-cover"><div><i class="fa-solid fa-hand-fist"></i><br>UFC e lutas</div></div><div class="generic-cover"><div><i class="fa-solid fa-trophy"></i><br>Campeonatos</div></div><div class="generic-cover"><div><i class="fa-solid fa-person-running"></i><br>Mais esportes</div></div><div class="generic-cover"><div><i class="fa-solid fa-futbol"></i><br>Futebol ao vivo</div></div><div class="generic-cover"><div><i class="fa-solid fa-hand-fist"></i><br>UFC e lutas</div></div><div class="generic-cover"><div><i class="fa-solid fa-trophy"></i><br>Campeonatos</div></div><div class="generic-cover"><div><i class="fa-solid fa-person-running"></i><br>Mais esportes</div></div></div></div></article>
+<article class="category"><div class="category-copy"><i class="fa-solid fa-lock"></i><h3>Programação adulta</h3><p>Conteúdo 18+ protegido e destinado exclusivamente a maiores de idade, com possibilidade de controle de acesso.</p></div><div class="mini-slider"><div class="mini-track reverse"><div class="generic-cover"><div><i class="fa-solid fa-18"></i><br>Conteúdo 18+</div></div><div class="generic-cover"><div><i class="fa-solid fa-shield-halved"></i><br>Acesso protegido</div></div><div class="generic-cover"><div><i class="fa-solid fa-key"></i><br>Controle por senha</div></div><div class="generic-cover"><div><i class="fa-solid fa-eye-slash"></i><br>Privacidade</div></div><div class="generic-cover"><div><i class="fa-solid fa-18"></i><br>Conteúdo 18+</div></div><div class="generic-cover"><div><i class="fa-solid fa-shield-halved"></i><br>Acesso protegido</div></div><div class="generic-cover"><div><i class="fa-solid fa-key"></i><br>Controle por senha</div></div><div class="generic-cover"><div><i class="fa-solid fa-eye-slash"></i><br>Privacidade</div></div></div></div></article>
+</div>
+</section>
+
+<section class="section" style="background:rgba(255,255,255,.018);border-block:1px solid var(--line)">
+<div class="container center">
+<span class="kicker">Tudo em um só lugar</span>
+<h2 class="title">Vários streamings em uma única plataforma.</h2>
+<p class="sub">Assista aos melhores conteúdos sem precisar administrar várias assinaturas separadas.</p>
+<div class="logo-cloud">
+<div class="brand-tile"><img src="https://cdn.simpleicons.org/netflix/ffffff" alt="Netflix"></div>
+<div class="brand-tile"><img src="https://cdn.simpleicons.org/primevideo/ffffff" alt="Prime Video"></div>
+<div class="brand-tile"><img src="https://cdn.simpleicons.org/hbo/ffffff" alt="Max"></div>
+<div class="brand-tile"><img src="https://cdn.simpleicons.org/disneyplus/ffffff" alt="Disney+"></div>
+<div class="brand-tile"><img src="https://cdn.simpleicons.org/appletv/ffffff" alt="Apple TV+"></div>
+<div class="brand-tile"><img src="https://cdn.simpleicons.org/paramountplus/ffffff" alt="Paramount+"></div>
+<div class="brand-tile"><img src="https://cdn.simpleicons.org/crunchyroll/ffffff" alt="Crunchyroll"></div>
+<div class="brand-tile"><img src="https://cdn.simpleicons.org/globoplay/ffffff" alt="Globoplay"></div>
+<div class="brand-tile"><b>PREMIERE</b></div>
+<div class="brand-tile"><b>TELECINE</b></div>
+<div class="brand-tile"><b>COMBATE</b></div>
+<div class="brand-tile"><b>SKY</b></div>
+</div>
+<div style="margin-top:28px"><button class="btn btn-main" onclick="openWizard()"><i class="fa-solid fa-play"></i> Quero assinar MaxPlay</button></div>
+</div>
+</section>
+
+<section class="section">
+<div class="container center">
+<span class="kicker">Conteúdo premium</span>
+<h2 class="title">Para todo tipo de público.</h2>
+<p class="sub">Filmes, séries, reality shows, documentários, canais e muito mais reunidos em um único lugar.</p>
+</div>
+<div class="poster-marquee-wrap">
+<div class="poster-marquee" id="marqueeTop"></div>
+<div class="poster-marquee right" id="marqueeBottom"></div>
+</div>
+<div class="center" style="margin-top:32px"><button class="btn btn-main" onclick="openWizard()"><i class="fa-solid fa-bolt"></i> Quero assinar MaxPlay</button></div>
+</section>
+
+<section class="section" id="comparacao" style="background:rgba(255,255,255,.018);border-block:1px solid var(--line)">
+<div class="container center"><span class="kicker">Compare e economize</span><h2 class="title">Isso é o que você gastaria assistindo tudo separadamente.</h2><p class="sub">Comparação promocional baseada nos planos mensais informados abaixo. Os valores das plataformas podem mudar.</p></div>
+<div class="container compare">
+<div class="price-grid" id="priceGrid"></div>
+<div class="total-box"><span style="font-size:10px;color:var(--muted)">SOMANDO AS ASSINATURAS</span><div class="old" id="totalSeparate">R$ 0,00</div><span style="font-size:10px;color:var(--muted);margin-top:20px">NA MAXPLAY, PLANOS A PARTIR DE</span><div class="new">R$ 35<small>/mês</small></div><p>Mais conteúdo, menos contas e suporte próximo sempre que precisar.</p><button class="btn btn-main" style="margin-top:22px" onclick="openWizard()">Quero economizar agora</button></div>
+</div>
+</section>
+
+<section class="section" id="vantagens">
+<div class="container center"><span class="kicker">Por que escolher a MaxPlay?</span><h2 class="title">Uma experiência feita para funcionar de verdade.</h2></div>
+<div class="container benefits">
+<div class="benefit"><i class="fa-solid fa-server"></i><h3>Servidor estável</h3><p>Estrutura preparada para oferecer uma experiência consistente no dia a dia.</p></div>
+<div class="benefit"><i class="fa-solid fa-screwdriver-wrench"></i><h3>Instalação orientada</h3><p>Você recebe o aplicativo e o passo a passo correto para seu aparelho.</p></div>
+<div class="benefit"><i class="fa-solid fa-display"></i><h3>Qualidade HD e Full HD</h3><p>Qualidade de imagem conforme o conteúdo, aparelho e conexão disponíveis.</p></div>
+<div class="benefit"><i class="fa-brands fa-whatsapp"></i><h3>Suporte de verdade</h3><p>Atendimento próximo para orientar instalação, acesso e utilização.</p></div>
+<div class="benefit"><i class="fa-solid fa-layer-group"></i><h3>Conteúdo completo</h3><p>Diferentes categorias reunidas para toda a família aproveitar.</p></div>
+<div class="benefit"><i class="fa-solid fa-ban"></i><h3>Experiência organizada</h3><p>Interface simples para encontrar canais, filmes e séries com facilidade.</p></div>
+</div>
+<div class="center" style="margin-top:28px"><button class="btn btn-main" onclick="openWizard()">Quero conhecer no teste</button></div>
+</section>
+
+<section class="section" style="background:rgba(255,255,255,.018);border-block:1px solid var(--line)">
+<div class="container center"><span class="kicker">Clientes MaxPlay</span><h2 class="title">O que nossos clientes dizem.</h2><p class="sub">Área preparada para você substituir depois pelos prints reais dos atendimentos e depoimentos.</p></div>
+<div class="container reviews">
+<div class="review"><div class="stars">★★★★★</div><p>“Gostei muito da organização e da facilidade para encontrar os conteúdos. O atendimento também foi rápido.”</p><div class="person"><div class="avatar">J</div><div><b>João, cliente MaxPlay</b><small>Depoimento demonstrativo</small></div></div></div>
+<div class="review"><div class="stars">★★★★★</div><p>“Consegui instalar com a orientação e em poucos minutos já estava usando na televisão.”</p><div class="person"><div class="avatar">M</div><div><b>Maria, cliente MaxPlay</b><small>Depoimento demonstrativo</small></div></div></div>
+<div class="review"><div class="stars">★★★★★</div><p>“Tem muita opção para a família inteira. O suporte me ajudou quando troquei de aparelho.”</p><div class="person"><div class="avatar">C</div><div><b>Carlos, cliente MaxPlay</b><small>Depoimento demonstrativo</small></div></div></div>
+</div>
+</section>
+
+<section class="section" id="planos">
+<div class="container center"><span class="kicker">Planos MaxPlay</span><h2 class="title">Escolha o plano ideal para sua casa.</h2><p class="sub">Todos os planos incluem o catálogo completo. O que muda é a quantidade de telas disponíveis.</p></div>
+<div class="container plans">
+<article class="plan"><h3>Starter</h3><div class="plan-price">R$ 35<small>/mês</small></div><ul><li><i class="fa-solid fa-check"></i>Qualidade HD e Full HD</li><li><i class="fa-solid fa-check"></i>Guia de programação EPG</li><li><i class="fa-solid fa-check"></i>Smart TV, TV Box, celular, tablet e computador</li><li><i class="fa-solid fa-check"></i>Pacote completo de filmes e séries</li><li><i class="fa-solid fa-check"></i>Programação adulta opcional</li><li><i class="fa-solid fa-check"></i>1 tela simultânea</li></ul><button class="btn btn-ghost" onclick="startPlan('Starter')">Testar Starter</button></article>
+<article class="plan hot"><span class="tag">MAIS ESCOLHIDO</span><h3>Smart</h3><div class="plan-price">R$ 45<small>/mês</small></div><ul><li><i class="fa-solid fa-check"></i>Todos os benefícios do Starter</li><li><i class="fa-solid fa-check"></i>1 televisão principal</li><li><i class="fa-solid fa-check"></i>1 celular como tela adicional</li><li><i class="fa-solid fa-check"></i>2 telas no total</li><li><i class="fa-solid fa-check"></i>Conteúdo completo</li><li><i class="fa-solid fa-check"></i>Suporte pelo WhatsApp</li></ul><button class="btn btn-main" onclick="startPlan('Smart')">Testar Smart</button></article>
+<article class="plan"><h3>Duo</h3><div class="plan-price">R$ 60<small>/mês</small></div><ul><li><i class="fa-solid fa-check"></i>Todos os benefícios do Smart</li><li><i class="fa-solid fa-check"></i>2 televisões</li><li><i class="fa-solid fa-check"></i>1 celular como tela adicional</li><li><i class="fa-solid fa-check"></i>3 telas no total</li><li><i class="fa-solid fa-check"></i>Ideal para mais ambientes</li><li><i class="fa-solid fa-check"></i>Suporte completo</li></ul><button class="btn btn-ghost" onclick="startPlan('Duo')">Testar Duo</button></article>
+</div>
+<div class="container test-banner"><div><b>Faça um teste de até 1 dia.</b><p>Conheça a plataforma e confira a compatibilidade antes de escolher seu plano.</p></div><button class="btn btn-main" onclick="openWizard()">Solicitar teste agora</button></div>
+</section>
+
+<section class="section" id="duvidas" style="background:rgba(255,255,255,.018);border-top:1px solid var(--line)">
+<div class="container center"><span class="kicker">Ainda tenho dúvidas</span><h2 class="title">Tudo o que você precisa saber.</h2></div>
+<div class="container faq">
+<details><summary>Como funciona o teste da MaxPlay?</summary><p>Você responde algumas perguntas rápidas, escolhe seu dispositivo, segue a instalação orientada e envia a solicitação pronta para o WhatsApp. O teste pode ter duração de até um dia, conforme disponibilidade.</p></details>
+<details><summary>Quais formas de pagamento são aceitas?</summary><p>O atendimento pode informar as formas disponíveis, incluindo Pix. A liberação ocorre após a confirmação do pagamento.</p></details>
+<details><summary>Quanto tempo leva para entregar o acesso?</summary><p>Após a instalação do aplicativo e a confirmação necessária, o atendimento realiza a liberação do acesso. O prazo pode variar conforme o horário e a demanda.</p></details>
+<details><summary>Não sei o sistema da minha televisão. O que faço?</summary><p>No botão de teste existe a opção “Não sei o sistema”. Ao selecioná-la, o site envia uma mensagem específica para o suporte ajudar na identificação.</p></details>
+<details><summary>Como funciona o suporte ao cliente?</summary><p>O suporte acontece pelo WhatsApp para orientar instalação, acesso e dúvidas de utilização.</p></details>
+<details><summary>A MaxPlay possui perfil no Reclame Aqui?</summary><p>Inclua aqui o link oficial do perfil quando ele estiver disponível e verificado. Não adicionamos um endereço não confirmado.</p></details>
+</div>
+<div class="container final-cta"><div><h3>Assista mais. Pague menos.</h3><p>Comece pelo teste e descubra o plano ideal para você.</p></div><button class="btn btn-main" onclick="openWizard()"><i class="fa-solid fa-play"></i> Quero assinar MaxPlay</button></div>
+</section>
+</main>
+
+<footer><div class="container foot"><div class="brand"><img src="https://i.postimg.cc/Qts9LLyC/65FA9AE8-3BF9-4980-A679-8C3AF56B6BC5.jpg" alt="MaxPlay"><div><b>MAX<span>PLAY</span></b><small>ENTRETENIMENTO DIGITAL</small></div></div><span>© <span id="year"></span> MaxPlay. Todos os direitos reservados.</span><a href="https://wa.me/5583989013955" target="_blank"><i class="fa-brands fa-whatsapp"></i> (83) 98901-3955</a></div></footer>
+
+<div class="modal" id="modal">
+<div class="wizard">
+<div class="whead"><div class="wbrand"><img src="https://i.postimg.cc/Qts9LLyC/65FA9AE8-3BF9-4980-A679-8C3AF56B6BC5.jpg" alt=""><div><b>Teste MaxPlay</b><small>Vamos preparar seu aparelho</small></div></div><button class="close" onclick="closeWizard()"><i class="fa-solid fa-xmark"></i></button></div>
+<div class="progress"><span id="progress"></span></div>
+<div class="wbody">
+<section class="wstep active" data-step="1"><span class="wk">Etapa 1 de 6</span><h2>Como você se chama?</h2><p class="wlead">Sua solicitação chegará identificada no atendimento.</p><div class="field"><label>Nome do cliente</label><input id="clientName" placeholder="Digite seu nome" autocomplete="name"></div></section>
+<section class="wstep" data-step="2"><span class="wk">Etapa 2 de 6</span><h2>Você já utilizou um serviço parecido?</h2><p class="wlead">Isso ajuda a adaptar o atendimento.</p><div class="options" data-field="experience"><button class="option" data-value="Nunca utilizei"><i class="fa-solid fa-seedling"></i><span><b>Nunca utilizei</b><small>Primeira experiência</small></span></button><button class="option" data-value="Já utilizei antes"><i class="fa-solid fa-clock-rotate-left"></i><span><b>Já utilizei antes</b><small>Conheço o funcionamento</small></span></button><button class="option" data-value="Utilizo atualmente"><i class="fa-solid fa-play"></i><span><b>Utilizo atualmente</b><small>Quero conhecer a MaxPlay</small></span></button><button class="option" data-value="Tenho pouca experiência"><i class="fa-solid fa-circle-info"></i><span><b>Tenho pouca experiência</b><small>Talvez precise de ajuda</small></span></button></div></section>
+<section class="wstep" data-step="3"><span class="wk">Etapa 3 de 6</span><h2>Em qual aparelho você quer testar?</h2><p class="wlead">Escolha a opção mais próxima do seu dispositivo.</p><div class="options" data-field="device"><button class="option" data-value="Samsung Smart TV"><i class="fa-solid fa-tv"></i><span><b>Samsung Smart TV</b><small>Sistema Tizen</small></span></button><button class="option" data-value="LG Smart TV"><i class="fa-solid fa-tv"></i><span><b>LG Smart TV</b><small>Sistema webOS</small></span></button><button class="option" data-value="Android TV"><i class="fa-brands fa-android"></i><span><b>Android TV</b><small>Philips, AOC, Philco...</small></span></button><button class="option" data-value="Google TV"><i class="fa-brands fa-google"></i><span><b>Google TV</b><small>TCL, Sony, Philips...</small></span></button><button class="option" data-value="TV Box"><i class="fa-solid fa-box"></i><span><b>TV Box</b><small>Aparelho Android externo</small></span></button><button class="option" data-value="Fire TV Stick"><i class="fa-brands fa-amazon"></i><span><b>Fire TV Stick</b><small>Dispositivo Amazon</small></span></button><button class="option" data-value="Celular Android"><i class="fa-solid fa-mobile-screen"></i><span><b>Celular Android</b><small>Samsung, Motorola, Xiaomi...</small></span></button><button class="option" data-value="Não sei o sistema"><i class="fa-solid fa-circle-question"></i><span><b>Não sei o sistema</b><small>Preciso de ajuda</small></span></button></div></section>
+<section class="wstep" data-step="4"><span class="wk">Etapa 4 de 6</span><h2>Qual é a marca do aparelho?</h2><p class="wlead">Escolha uma opção para completar sua solicitação.</p><div class="options" id="brandOptions"></div></section>
+<section class="wstep" data-step="5"><span class="wk">Etapa 5 de 6</span><h2 id="installTitle">Vamos preparar seu aparelho.</h2><p class="wlead">Siga as etapas e depois solicite a liberação.</p><div class="instruction" id="instruction"></div></section>
+<section class="wstep" data-step="6"><span class="wk">Etapa 6 de 6</span><h2>Tudo pronto para solicitar seu teste.</h2><p class="wlead">Confira os dados que serão enviados ao WhatsApp.</p><div class="summary" id="summary"></div></section>
+</div>
+<div class="wactions"><button class="btn btn-ghost hidden" id="back" onclick="prevStep()"><i class="fa-solid fa-arrow-left"></i> Voltar</button><button class="btn btn-main" id="next" onclick="nextStep()">Continuar <i class="fa-solid fa-arrow-right"></i></button><button class="btn btn-wa hidden" id="send" onclick="sendWhatsApp()"><i class="fa-brands fa-whatsapp"></i> Solicitar teste</button></div>
+</div>
+</div>
+<div class="toast" id="toast"></div>
+
+<script>
+const CONFIG={
+ whatsapp:"5583989013955",
+ tmdbKey:"54b9cff0f48a3f127fa5cd5906bbe251",
+ downloaderCode:"000000", // TROQUE PELO CÓDIGO REAL
+ apkUrl:"#", // TROQUE PELO LINK DO APK
+ appName:"MaxPlay",
+ apps:{samsung:"Aplicativo compatível indicado pelo suporte",lg:"Aplicativo compatível indicado pelo suporte"}
+};
+const prices=[
+ ["Netflix Premium",59.90],["Max Platinum",55.90],["Prime Video",19.90],["Disney+ Premium",69.90],
+ ["Apple TV+",21.90],["Telecine",29.90],["Premiere",59.90],["Combate",34.90],
+ ["Paramount+",27.90],["Globoplay",54.90],["Claro tv+",69.90],["SKY+",59.90]
+];
+const state={step:1,name:"",experience:"",device:"",brand:"",plan:"Não informado",installed:false};
+const IMG="https://image.tmdb.org/t/p/";
+document.getElementById("year").textContent=new Date().getFullYear();
+
+function money(v){return v.toLocaleString("pt-BR",{style:"currency",currency:"BRL"})}
+function escapeHtml(t=""){return t.replace(/[&<>"']/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"}[m]))}
+function toggleMenu(){document.getElementById("links").classList.toggle("mobile")}
+document.querySelectorAll("#links a,#links button").forEach(x=>x.addEventListener("click",()=>document.getElementById("links").classList.remove("mobile")));
+
+async function tmdb(path,params={}){
+ const q=new URLSearchParams({api_key:CONFIG.tmdbKey,language:"pt-BR",...params});
+ const r=await fetch(`https://api.themoviedb.org/3${path}?${q}`);
+ if(!r.ok)throw new Error("TMDB");
+ return r.json();
+}
+function posterHTML(items){
+ const base=items.filter(x=>x.poster_path).slice(0,10).map(x=>`<div class="mini-poster"><img loading="lazy" src="${IMG}w342${x.poster_path}" alt="${escapeHtml(x.title||x.name||"Conteúdo")}"></div>`).join("");
+ return base+base;
+}
+function marqueeHTML(items){
+ const base=items.filter(x=>x.poster_path).slice(0,20).map(x=>`<div class="marquee-poster"><img loading="lazy" src="${IMG}w342${x.poster_path}" alt="${escapeHtml(x.title||x.name||"Conteúdo")}"></div>`).join("");
+ return base+base;
+}
+async function loadContent(){
+ try{
+  const [movies,series,anime,kids,trending]=await Promise.all([
+   tmdb("/movie/popular"),tmdb("/tv/popular"),tmdb("/discover/tv",{with_genres:"16",with_origin_country:"JP",sort_by:"popularity.desc"}),
+   tmdb("/discover/movie",{with_genres:"10751,16",sort_by:"popularity.desc"}),tmdb("/trending/all/week")
+  ]);
+  document.getElementById("moviesTrack").innerHTML=posterHTML(movies.results);
+  document.getElementById("seriesTrack").innerHTML=posterHTML(series.results);
+  document.getElementById("animeTrack").innerHTML=posterHTML(anime.results);
+  document.getElementById("kidsTrack").innerHTML=posterHTML(kids.results);
+  document.getElementById("marqueeTop").innerHTML=marqueeHTML([...movies.results,...series.results]);
+  document.getElementById("marqueeBottom").innerHTML=marqueeHTML([...anime.results,...trending.results]);
+  const hero=trending.results.find(x=>x.backdrop_path);
+  if(hero){const u=IMG+"original"+hero.backdrop_path;document.getElementById("heroBackdrop").src=u;document.getElementById("heroFeature").src=u;document.getElementById("heroTitle").textContent=hero.title||hero.name||"Entretenimento sem limites"}
+ }catch(e){console.warn("TMDB indisponível",e)}
+}
+loadContent();
+
+const priceGrid=document.getElementById("priceGrid");
+priceGrid.innerHTML=prices.map(([n,v])=>`<div class="price-item"><b>${n}</b><span>${money(v)}</span></div>`).join("");
+document.getElementById("totalSeparate").textContent=money(prices.reduce((s,x)=>s+x[1],0));
+
+function openWizard(){
+ Object.assign(state,{step:1,name:"",experience:"",device:"",brand:"",installed:false});
+ document.getElementById("clientName").value="";
+ document.querySelectorAll(".option").forEach(o=>o.classList.remove("selected"));
+ document.getElementById("modal").classList.add("show");document.body.classList.add("lock");renderStep()
+}
+function closeWizard(){document.getElementById("modal").classList.remove("show");document.body.classList.remove("lock")}
+function startPlan(p){openWizard();state.plan=p}
+document.querySelectorAll("[data-field] .option").forEach(b=>b.addEventListener("click",()=>{
+ const g=b.closest("[data-field]");g.querySelectorAll(".option").forEach(x=>x.classList.remove("selected"));b.classList.add("selected");state[g.dataset.field]=b.dataset.value
+}));
+function nextStep(){
+ if(state.step===1){const n=document.getElementById("clientName").value.trim();if(n.length<2)return toast("Digite seu nome.");state.name=n}
+ if(state.step===2&&!state.experience)return toast("Escolha uma opção.");
+ if(state.step===3&&!state.device)return toast("Escolha seu dispositivo.");
+ if(state.step===3&&state.device==="Não sei o sistema"){state.brand="Não informado";state.installed=false;state.step=6;renderStep();return}
+ if(state.step===3)buildBrands();
+ if(state.step===4&&!state.brand)return toast("Escolha a marca.");
+ if(state.step===4)buildInstructions();
+ if(state.step===5)state.installed=true;
+ if(state.step<6)state.step++;
+ renderStep()
+}
+function prevStep(){if(state.step===6&&state.device==="Não sei o sistema")state.step=3;else if(state.step>1)state.step--;renderStep()}
+function renderStep(){
+ document.querySelectorAll(".wstep").forEach(s=>s.classList.toggle("active",+s.dataset.step===state.step));
+ document.getElementById("progress").style.width=(state.step/6*100)+"%";
+ document.getElementById("back").classList.toggle("hidden",state.step===1);
+ document.getElementById("next").classList.toggle("hidden",state.step===6);
+ document.getElementById("send").classList.toggle("hidden",state.step!==6);
+ if(state.step===6)buildSummary()
+}
+function buildBrands(){
+ const opts={"Samsung Smart TV":["Samsung"],"LG Smart TV":["LG"],"Android TV":["Philips","AOC","Philco","TCL","Multilaser","Outra marca"],"Google TV":["TCL","Philips","Sony","Hisense","Outra marca"],"TV Box":["MXQ / genérica","Xiaomi","Aquário","Intelbras","Outra marca"],"Fire TV Stick":["Amazon Fire TV Stick"],"Celular Android":["Samsung","Motorola","Xiaomi","Realme","Outra marca"]}[state.device]||["Outra marca"];
+ state.brand="";
+ const w=document.getElementById("brandOptions");
+ w.innerHTML=opts.map(v=>`<button class="option" data-value="${v}"><i class="fa-solid fa-tag"></i><span><b>${v}</b><small>Selecionar marca</small></span></button>`).join("");
+ w.querySelectorAll(".option").forEach(b=>b.onclick=()=>{w.querySelectorAll(".option").forEach(x=>x.classList.remove("selected"));b.classList.add("selected");state.brand=b.dataset.value})
+}
+function buildInstructions(){
+ const box=document.getElementById("instruction"),title=document.getElementById("installTitle");
+ if(["Android TV","Google TV","TV Box","Celular Android"].includes(state.device)){
+  title.textContent=`Instale o ${CONFIG.appName} no seu aparelho.`;
+  box.innerHTML=`<b><i class="fa-solid fa-download" style="color:var(--o)"></i> Instalação pelo Downloader</b><ol><li>Abra a loja de aplicativos.</li><li>Pesquise por <b>Downloader</b>, o aplicativo de ícone laranja.</li><li>Instale, abra e permita o acesso solicitado.</li><li>Digite o código abaixo.</li><li>Baixe e instale o <b>${CONFIG.appName}</b>.</li><li>Abra o aplicativo e deixe a tela aberta.</li></ol><div class="code"><span><small style="display:block;color:var(--muted)">Código do Downloader</small><strong>${CONFIG.downloaderCode}</strong></span><button onclick="copyCode()">Copiar</button></div>`
+ }else if(state.device==="Fire TV Stick"){
+  title.textContent="Prepare seu Fire TV Stick.";
+  box.innerHTML=`<b><i class="fa-brands fa-amazon" style="color:var(--o)"></i> Instalação no Fire TV</b><ol><li>Instale o Downloader pela loja Amazon.</li><li>Permita a instalação de aplicativos pelo Downloader.</li><li>Abra e digite o código abaixo.</li><li>Instale e abra o ${CONFIG.appName}.</li></ol><div class="code"><span><small style="display:block;color:var(--muted)">Código</small><strong>${CONFIG.downloaderCode}</strong></span><button onclick="copyCode()">Copiar</button></div>`
+ }else{
+  const app=state.device==="Samsung Smart TV"?CONFIG.apps.samsung:CONFIG.apps.lg;
+  title.textContent=`Prepare sua ${state.device}.`;
+  box.innerHTML=`<b><i class="fa-solid fa-tv" style="color:var(--o)"></i> Aplicativo para sua TV</b><ol><li>Abra a loja de aplicativos da televisão.</li><li>Pesquise por: <b>${app}</b>.</li><li>Instale e abra o aplicativo.</li><li>Deixe a tela inicial aberta e continue.</li></ol><p class="note">O suporte confirmará o aplicativo exato compatível com o modelo da sua TV.</p>`
+ }
+}
+function copyCode(){navigator.clipboard?.writeText(CONFIG.downloaderCode);toast("Código copiado.")}
+function buildSummary(){
+ const help=state.device==="Não sei o sistema";
+ const rows=[["Nome",state.name],["Experiência",state.experience],["Plano",state.plan],["Dispositivo",state.device],["Marca",help?"Precisa de ajuda":state.brand],["Instalação",help?"Ainda não iniciada":"Concluída"]];
+ document.getElementById("summary").innerHTML=rows.map(([a,b])=>`<div class="sumrow"><span>${a}</span><b>${escapeHtml(b||"Não informado")}</b></div>`).join("")
+}
+function sendWhatsApp(){
+ const help=state.device==="Não sei o sistema";
+ const txt=help?`Olá! Meu nome é ${state.name}. Quero realizar um teste da MaxPlay, mas não sei identificar o sistema da minha televisão ou aparelho.\n\nExperiência: ${state.experience}\nPlano de interesse: ${state.plan}\nPreciso de ajuda para identificar o dispositivo e fazer a instalação.`:`Olá! Quero solicitar meu teste imediato da MaxPlay.\n\n👤 Nome: ${state.name}\n📺 Dispositivo: ${state.device}\n🏷️ Marca: ${state.brand}\n📲 Aplicativo instalado: ${CONFIG.appName}\n✅ Instalação concluída: Sim\n🆕 Experiência anterior: ${state.experience}\n📦 Plano de interesse: ${state.plan}\n\nO aplicativo já está instalado e aberto. Aguardo a liberação do teste.`;
+ window.open(`https://wa.me/${CONFIG.whatsapp}?text=${encodeURIComponent(txt)}`,"_blank")
+}
+function toast(t){const e=document.getElementById("toast");e.textContent=t;e.classList.add("show");clearTimeout(window.tt);window.tt=setTimeout(()=>e.classList.remove("show"),2200)}
+document.getElementById("modal").onclick=e=>{if(e.target.id==="modal")closeWizard()};
+document.addEventListener("keydown",e=>{if(e.key==="Escape")closeWizard()});
+</script>
+</body>
+</html>
